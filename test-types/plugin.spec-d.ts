@@ -1,9 +1,11 @@
 import type { Http2Server } from 'node:http2';
+
 import type { FastifyPluginAsync, FastifyPluginCallback } from 'fastify';
 import fastify from 'fastify';
 import fp from 'fastify-plugin';
 import { assertType, describe, it } from 'vitest';
 import z from 'zod/v4';
+
 import type {
   FastifyPluginAsyncZod,
   FastifyPluginCallbackZod,

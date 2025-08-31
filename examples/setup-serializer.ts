@@ -1,7 +1,7 @@
+import type { ZodSerializerCompilerOptions } from '@marcalexiei/fastify-type-provider-zod';
 import {
   createSerializerCompiler,
   validatorCompiler,
-  type ZodSerializerCompilerOptions,
 } from '@marcalexiei/fastify-type-provider-zod';
 import Fastify from 'fastify';
 

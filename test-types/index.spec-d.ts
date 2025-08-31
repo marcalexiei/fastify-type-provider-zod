@@ -8,6 +8,7 @@ import type {
 import fastify from 'fastify';
 import { assertType, describe, expectTypeOf, it } from 'vitest';
 import { z } from 'zod/v4';
+
 import type { ZodTypeProvider } from '../src/index.ts';
 import { serializerCompiler, validatorCompiler } from '../src/index.ts';
 

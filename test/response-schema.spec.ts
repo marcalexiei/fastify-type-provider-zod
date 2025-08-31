@@ -2,6 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import Fastify from 'fastify';
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { z } from 'zod/v4';
+
 import type { ZodTypeProvider } from '../src/index.ts';
 import {
   createSerializerCompiler,

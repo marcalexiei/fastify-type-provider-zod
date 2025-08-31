@@ -1,10 +1,8 @@
 import type { FastifySchemaValidationError } from 'fastify/types/schema.js';
 import { describe, expectTypeOf, it } from 'vitest';
 
-import {
-  hasZodFastifySchemaValidationErrors,
-  type ZodFastifySchemaValidationError,
-} from '../src/index.ts';
+import type { ZodFastifySchemaValidationError } from '../src/index.ts';
+import { hasZodFastifySchemaValidationErrors } from '../src/index.ts';
 
 describe('ZodFastifySchemaValidationError', () => {
   it('should be assignable to FastifySchemaValidationError', () => {

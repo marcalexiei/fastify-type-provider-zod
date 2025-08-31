@@ -1,9 +1,8 @@
 import type { $ZodDate, $ZodUndefined, JSONSchema } from 'zod/v4/core';
 import { $ZodRegistry, $ZodType, toJSONSchema } from 'zod/v4/core';
-import {
-  type OpenAPISchemaVersion,
-  removeJSONSchemaPropertiesNotUsedByOpenAPI,
-} from './openapi.ts';
+
+import type { OpenAPISchemaVersion } from './openapi.ts';
+import { removeJSONSchemaPropertiesNotUsedByOpenAPI } from './openapi.ts';
 
 const getSchemaId = (id: string, io: 'input' | 'output') => {
   return io === 'input' ? `${id}Input` : id;

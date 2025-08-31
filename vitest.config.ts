@@ -1,4 +1,5 @@
-import { defineConfig, type TestProjectConfiguration } from 'vitest/config';
+import type { TestProjectConfiguration } from 'vitest/config';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {

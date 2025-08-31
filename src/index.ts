@@ -11,7 +11,6 @@ export {
   type ZodSerializerCompilerOptions,
   type ZodTypeProvider,
 } from './core.ts';
-
 export {
   hasZodFastifySchemaValidationErrors,
   InvalidSchemaError,
@@ -19,5 +18,4 @@ export {
   ResponseSerializationError,
   type ZodFastifySchemaValidationError,
 } from './errors.ts';
-
 export type { ZodOpenApiSchemaMetadata } from './zod-meta.ts';
