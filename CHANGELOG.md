@@ -1,5 +1,26 @@
 # @marcalexiei/fastify-type-provider-zod
 
+## 2.0.0
+
+### Major Changes
+
+- [#47](https://github.com/marcalexiei/fastify-type-provider-zod/pull/47) [`f52fbb7`](https://github.com/marcalexiei/fastify-type-provider-zod/commit/f52fbb7411730856245afb96cde98f78d8dad1ef) Thanks [@marcalexiei](https://github.com/marcalexiei)! - Remove `skipList` from `createJsonSchemaTransform` options
+
+  You can rely on `route.schema.hide` property to have the same behavior.
+
+  More info can be found on the issue: <https://github.com/marcalexiei/fastify-type-provider-zod/issues/46>
+
+- [#40](https://github.com/marcalexiei/fastify-type-provider-zod/pull/40) [`70e1e03`](https://github.com/marcalexiei/fastify-type-provider-zod/commit/70e1e03308bd42eadef6564bc95c3f41ba8b96ea) Thanks [@marcalexiei](https://github.com/marcalexiei)! - Use Zod’s built-in `toJSONSchema` with the `openapi-3.0` target instead of relying on a custom conversion from `draft-2020-12` to OpenAPI 3.0.
+
+  > [!WARNING] > **Breaking Change**
+  >
+  > - Dropped support for `zod@3`
+  > - Requires **`zod@4.1.4` or later**
+  >
+  > Why not `^4.1.0`? Versions before `4.1.4` contain bugs that affect `openapi-3.0` schema output.
+  >
+  > See [issue #37](https://github.com/marcalexiei/fastify-type-provider-zod/issues/37) for more details.
+
 ## 1.2.3
 
 ### Patch Changes
