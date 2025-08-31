@@ -783,7 +783,7 @@ describe('transformer', () => {
       return app;
     };
 
-    it('should replace `anyOf` with `"allOf": [...], "nullable": true`  when schema contains only two elements and one is `"type": "null"`', async () => {
+    it('should handle union with an array and `null`', async () => {
       const app = await createNullCaseApp();
 
       const VALUE_SCHEMA = z.union([z.null(), z.array(z.string())]);
@@ -807,39 +807,33 @@ describe('transformer', () => {
       expect(openApiSpec).toMatchSnapshot();
     });
 
-    it(
-      [
-        'should replace `anyOf` when it contains 2 elements: `{ anyOf: [<null>, <non-null>]} s`',
-        'and one of them is `"type": "null" with `{...<non-null>, nullable: true }`',
-      ].join(' '),
-      async () => {
-        const app = await createNullCaseApp();
+    it('should handle union with `null` value and more than 2 other values', async () => {
+      const app = await createNullCaseApp();
 
-        const VALUE_SCHEMA = z.union([
-          z.null(),
-          z.array(z.string()),
-          z.literal('any'),
-        ]);
+      const VALUE_SCHEMA = z.union([
+        z.null(),
+        z.array(z.string()),
+        z.literal('any'),
+      ]);
 
-        app.withTypeProvider<ZodTypeProvider>().route({
-          method: 'POST',
-          url: '/',
-          schema: {
-            response: { 200: VALUE_SCHEMA },
-          },
-          handler: (_, res) => {
-            res.send(null);
-          },
-        });
+      app.withTypeProvider<ZodTypeProvider>().route({
+        method: 'POST',
+        url: '/',
+        schema: {
+          response: { 200: VALUE_SCHEMA },
+        },
+        handler: (_, res) => {
+          res.send(null);
+        },
+      });
 
-        await app.ready();
+      await app.ready();
 
-        const openApiSpec = app.swagger();
+      const openApiSpec = app.swagger();
 
-        await expect(openApiSpec).toBeValidOpenAPISchema();
-        expect(openApiSpec).toMatchSnapshot();
-      },
-    );
+      await expect(openApiSpec).toBeValidOpenAPISchema();
+      expect(openApiSpec).toMatchSnapshot();
+    });
   });
 
   describe('description and examples fields with custom schema registry', () => {
