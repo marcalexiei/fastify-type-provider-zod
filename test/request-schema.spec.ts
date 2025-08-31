@@ -16,44 +16,42 @@ describe('response schema', () => {
     app.setValidatorCompiler(validatorCompiler);
     app.setSerializerCompiler(serializerCompiler);
 
-    app.after(() => {
-      app
-        .withTypeProvider<ZodTypeProvider>()
-        .route({
-          method: 'POST',
-          url: '/',
-          schema: {
-            body: REQUEST_SCHEMA,
-          },
-          handler: (req, res) => {
-            res.send({
-              name: req.body.name,
-            });
-          },
-        })
-        .route({
-          method: 'GET',
-          url: '/',
-          schema: {
-            querystring: REQUEST_SCHEMA,
-          },
-          handler: (req, res) => {
-            res.send({
-              name: req.query.name,
-            });
-          },
-        })
-        .route({
-          method: 'GET',
-          url: '/no-schema',
-          schema: undefined,
-          handler: (_req, res) => {
-            res.send({
-              status: 'ok',
-            });
-          },
-        });
-    });
+    app
+      .withTypeProvider<ZodTypeProvider>()
+      .route({
+        method: 'POST',
+        url: '/',
+        schema: {
+          body: REQUEST_SCHEMA,
+        },
+        handler: (req, res) => {
+          res.send({
+            name: req.body.name,
+          });
+        },
+      })
+      .route({
+        method: 'GET',
+        url: '/',
+        schema: {
+          querystring: REQUEST_SCHEMA,
+        },
+        handler: (req, res) => {
+          res.send({
+            name: req.query.name,
+          });
+        },
+      })
+      .route({
+        method: 'GET',
+        url: '/no-schema',
+        schema: undefined,
+        handler: (_req, res) => {
+          res.send({
+            status: 'ok',
+          });
+        },
+      });
 
     await app.ready();
 
@@ -134,17 +132,15 @@ describe('should return a FST_ERR_INVALID_SCHEMA error when a non-zod schema is 
     app.setValidatorCompiler(validatorCompiler);
     app.setSerializerCompiler(serializerCompiler);
 
-    app.after(() => {
-      app.withTypeProvider<ZodTypeProvider>().route({
-        method: 'GET',
-        url: '/invalid',
-        schema: {
-          querystring: { notZod: true },
-        },
-        handler: (_, res) => {
-          res.send({ test: 's' });
-        },
-      });
+    app.withTypeProvider<ZodTypeProvider>().route({
+      method: 'GET',
+      url: '/invalid',
+      schema: {
+        querystring: { notZod: true },
+      },
+      handler: (_, res) => {
+        res.send({ test: 's' });
+      },
     });
 
     await app.ready();
