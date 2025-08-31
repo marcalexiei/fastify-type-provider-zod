@@ -14,11 +14,31 @@
 [issuesBadge]: https://img.shields.io/github/issues/marcalexiei/fastify-type-provider-zod.svg?style=for-the-badge
 [issuesURL]: https://github.com/marcalexiei/fastify-type-provider-zod/issues
 
+By combining Zod with Fastify’s type providers, this package bridges the gap between static typing and runtime schema enforcement.
+
+It supports automatic generation of JSON Schema from Zod, facilitating integration with OpenAPI 3.x via Fastify plugins like [`@fastify/swagger`](https://github.com/fastify/fastify-swagger) and [`@fastify/swagger-ui`](https://github.com/fastify/fastify-swagger-ui).
+
+## Getting started
+
+<https://marcalexiei.github.io/fastify-type-provider-zod/getting-started.html>
+
+## Examples
+
+<https://marcalexiei.github.io/fastify-type-provider-zod/examples.html>
+
+## Credits
+
+This project is built upon [turkerdev/fastify-type-provider-zod](https://github.com/turkerdev/fastify-type-provider-zod)
+and wouldn’t be possible without the work of turkerdev and the contributions of the entire community behind it.
+
 ##  Reason
 
-TL;DR; My contribution on the upstream repository are getting missed.
+TL;DR; My contribution on the `turkerdev/fastify-type-provider-zod` repository are getting missed.
 
-If this changes, I'm more than willing to merge the changes here back to the upstream repo.
+~~If this changes, I'm more than willing to merge the changes here back to the upstream repo.~~
+
+As of 2025-08-31, no communication have come from the original repo maintainer.
+Also some merged PRs (e.g.: [205](https://github.com/turkerdev/fastify-type-provider-zod/pull/205)) make the fork implementation incompatible with this repo.
 
 <details>
 
@@ -46,7 +66,7 @@ Ignored issues:
 
 </details>
 
-## Differences from upstream
+## Differences from `turkerdev/fastify-type-provider-zod`
 
 1. Automated changelog using Changeset
 2. CI tests also Windows
@@ -56,16 +76,8 @@ Ignored issues:
 5. Using `swagger` object for OpenAPI standard throws an error instead of a warning
 6. Uses `vitest` typechecking rather than `tsd`
 7. Type tests are run on `node`, `node16`, `bundler` module resolutions
+8. `createJsonSchemaTransform` `skipList` option has been removed in favor of `route.schema.hide`
 
-## Getting started
+---
 
-<https://marcalexiei.github.io/fastify-type-provider-zod/getting-started.html>
-
-## Examples
-
-<https://marcalexiei.github.io/fastify-type-provider-zod/examples.html>
-
-## Credits
-
-This project is built upon [turkerdev/fastify-type-provider-zod](https://github.com/turkerdev/fastify-type-provider-zod)
-and wouldn’t be possible without the work of turkerdev and the contributions of the entire community behind it.
+As of 2025-08-31 the implementation from the original fork have diverged so I'll stop updating this section.
