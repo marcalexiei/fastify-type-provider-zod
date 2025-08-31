@@ -762,6 +762,56 @@ describe('transformer', () => {
     expect(openApiSpec).toMatchSnapshot();
   });
 
+  it('should generate error if a generated input schema name collides with a user defined schema', async () => {
+    const app = Fastify();
+    app.setValidatorCompiler(validatorCompiler);
+    app.setSerializerCompiler(serializerCompiler);
+
+    const schemaRegistry = z.registry<{ id: string }>();
+
+    const USER_SCHEMA = z.object({
+      id: z.string().default('1'),
+      createdAt: z.date(),
+    });
+
+    schemaRegistry.add(USER_SCHEMA, { id: 'User' });
+    // this should generate a collision error since 
+    schemaRegistry.add(USER_SCHEMA, { id: 'UserInput' });
+
+    await app.register(fastifySwagger, {
+      openapi: {
+        info: {
+          title: 'SampleApi',
+          description: 'Sample backend service',
+          version: '1.0.0',
+        },
+        servers: [],
+      },
+      transform: createJsonSchemaTransform({ schemaRegistry }),
+      transformObject: createJsonSchemaTransformObject({ schemaRegistry }),
+    });
+
+    app.withTypeProvider<ZodTypeProvider>().route({
+      method: 'POST',
+      url: '/',
+      schema: {
+        body: USER_SCHEMA,
+        response: { 200: USER_SCHEMA },
+      },
+      handler: (_, res) => {
+        res.send({
+          id: undefined,
+          createdAt: new Date(0),
+        });
+      },
+    });
+
+    await app.ready();
+
+    expect(() => app.swagger()).toThrow(`Cannot create schema "UserInput": Name already taken by another user defined schema.`)
+    
+  })
+
   describe('null type', () => {
     const createNullCaseApp = async (): Promise<FastifyInstance> => {
       const app = Fastify();

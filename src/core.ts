@@ -226,11 +226,9 @@ export const createJsonSchemaTransformObject = (
     );
 
     for (const key in outputSchemas) {
-      /* @todo add test */
-      /* v8 ignore next 5 */
       if (inputSchemas[key]) {
         throw new Error(
-          `Collision detected for schema "${key}". The is already an input schema with the same name.`,
+          `Cannot create schema "${key}": Name already taken by another user defined schema.`,
         );
       }
     }
