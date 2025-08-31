@@ -3,7 +3,7 @@ import { Validator } from '@seriousme/openapi-schema-validator';
 import { expect } from 'vitest';
 
 interface CustomMatchers<R = unknown> {
-  toBeValidOpenAPISchema: () => R;
+  toBeValidOpenAPISchema: () => Promise<R>;
 }
 
 // https://vitest.dev/guide/extending-matchers

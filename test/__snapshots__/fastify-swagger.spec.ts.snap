@@ -475,7 +475,7 @@ exports[`transformer > generates types for fastify-swagger correctly 3.1 1`] = `
 }
 `;
 
-exports[`transformer > null type > should replace \`anyOf\` when it contains 2 elements: \`{ anyOf: [<null>, <non-null>]} s\` and one of them is \`"type": "null" with \`{...<non-null>, nullable: true }\` 1`] = `
+exports[`transformer > null type > should handle union with \`null\` value and more than 2 other values 1`] = `
 {
   "components": {
     "schemas": {},
@@ -528,7 +528,7 @@ exports[`transformer > null type > should replace \`anyOf\` when it contains 2 e
 }
 `;
 
-exports[`transformer > null type > should replace \`anyOf\` with \`"allOf": [...], "nullable": true\`  when schema contains only two elements and one is \`"type": "null"\` 1`] = `
+exports[`transformer > null type > should handle union with an array and \`null\` 1`] = `
 {
   "components": {
     "schemas": {},
@@ -992,7 +992,7 @@ exports[`transformer > should generate referenced input and output schemas corre
 }
 `;
 
-exports[`transformer > should not generate ref 1`] = `
+exports[`transformer > should not generate ref when not using a zod registry 1`] = `
 {
   "components": {
     "schemas": {},
@@ -1045,6 +1045,48 @@ exports[`transformer > should not generate ref 1`] = `
         },
         "responses": {
           "200": {
+            "description": "Default Response",
+          },
+        },
+      },
+    },
+  },
+  "servers": [],
+}
+`;
+
+exports[`transformer > should not include route that have \`schema.hide: true\` 1`] = `
+{
+  "components": {
+    "schemas": {},
+  },
+  "info": {
+    "description": "Sample backend service",
+    "title": "SampleApi",
+    "version": "1.0.0",
+  },
+  "openapi": "3.0.3",
+  "paths": {
+    "/": {
+      "post": {
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "value": {
+                      "type": "string",
+                    },
+                  },
+                  "required": [
+                    "value",
+                  ],
+                  "type": "object",
+                },
+              },
+            },
             "description": "Default Response",
           },
         },

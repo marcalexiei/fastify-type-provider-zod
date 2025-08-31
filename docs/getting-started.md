@@ -7,7 +7,7 @@ This project requires the following peer dependencies:
 | Peer dependency | Version range |
 | --------------- | :-----------: |
 | fastify         | ^5.0.0        |
-| zod.            | ^4.1.4        |
+| zod             | ^4.1.4        |
 
 ## Installation
 

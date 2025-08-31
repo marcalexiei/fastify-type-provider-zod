@@ -18,35 +18,34 @@ describe('response schema', () => {
       app.setValidatorCompiler(validatorCompiler);
       app.setSerializerCompiler(serializerCompiler);
 
-      app.after(() => {
-        app
-          .withTypeProvider<ZodTypeProvider>()
-          .route({
-            method: 'GET',
-            url: '/',
-            schema: {
-              response: {
-                204: z.undefined().describe('test'),
-              },
+      app
+        .withTypeProvider<ZodTypeProvider>()
+        .route({
+          method: 'GET',
+          url: '/',
+          schema: {
+            response: {
+              204: z.undefined().describe('test'),
             },
-            handler: (_req, res) => {
-              res.status(204).send();
+          },
+          handler: (_req, res) => {
+            res.status(204).send();
+          },
+        })
+        .route({
+          method: 'GET',
+          url: '/incorrect',
+          schema: {
+            response: {
+              204: z.undefined().describe('test'),
             },
-          })
-          .route({
-            method: 'GET',
-            url: '/incorrect',
-            schema: {
-              response: {
-                204: z.undefined().describe('test'),
-              },
-            },
-            handler: (_req, res) => {
-              // @ts-expect-error
-              res.status(204).send({ id: 1 });
-            },
-          });
-      });
+          },
+          handler: (_req, res) => {
+            // @ts-expect-error
+            res.status(204).send({ id: 1 });
+          },
+        });
+
       app.setErrorHandler((err, _req, reply) => {
         if (isResponseSerializationError(err)) {
           return reply.code(500).send({
@@ -111,33 +110,31 @@ describe('response schema', () => {
       app.setValidatorCompiler(validatorCompiler);
       app.setSerializerCompiler(serializerCompiler);
 
-      app.after(() => {
-        app.withTypeProvider<ZodTypeProvider>().route({
-          method: 'GET',
-          url: '/',
-          schema: {
-            response: {
-              200: REPLY_SCHEMA,
-            },
+      app.withTypeProvider<ZodTypeProvider>().route({
+        method: 'GET',
+        url: '/',
+        schema: {
+          response: {
+            200: REPLY_SCHEMA,
           },
-          handler: (_req, res) => {
-            res.send('test');
-          },
-        });
+        },
+        handler: (_req, res) => {
+          res.send('test');
+        },
+      });
 
-        app.withTypeProvider<ZodTypeProvider>().route({
-          method: 'GET',
-          url: '/incorrect',
-          schema: {
-            response: {
-              200: REPLY_SCHEMA,
-            },
+      app.withTypeProvider<ZodTypeProvider>().route({
+        method: 'GET',
+        url: '/incorrect',
+        schema: {
+          response: {
+            200: REPLY_SCHEMA,
           },
-          handler: (_req, res) => {
-            // @ts-expect-error need to test error
-            res.send({ name: 'test' });
-          },
-        });
+        },
+        handler: (_req, res) => {
+          // @ts-expect-error need to test error
+          res.send({ name: 'test' });
+        },
       });
 
       await app.ready();
@@ -182,35 +179,33 @@ describe('response schema', () => {
       app.setValidatorCompiler(validatorCompiler);
       app.setSerializerCompiler(serializerCompiler);
 
-      app.after(() => {
-        app.withTypeProvider<ZodTypeProvider>().route({
-          method: 'GET',
-          url: '/',
-          schema: {
-            response: {
-              200: REPLY_SCHEMA,
-            },
+      app.withTypeProvider<ZodTypeProvider>().route({
+        method: 'GET',
+        url: '/',
+        schema: {
+          response: {
+            200: REPLY_SCHEMA,
           },
-          handler: (_req, res) => {
-            res.send({
-              name: 'test',
-            });
-          },
-        });
+        },
+        handler: (_req, res) => {
+          res.send({
+            name: 'test',
+          });
+        },
+      });
 
-        app.withTypeProvider<ZodTypeProvider>().route({
-          method: 'GET',
-          url: '/incorrect',
-          schema: {
-            response: {
-              200: REPLY_SCHEMA,
-            },
+      app.withTypeProvider<ZodTypeProvider>().route({
+        method: 'GET',
+        url: '/incorrect',
+        schema: {
+          response: {
+            200: REPLY_SCHEMA,
           },
-          handler: (_req, res) => {
-            // @ts-expect-error passing string to a object schema to test errors
-            res.send('test');
-          },
-        });
+        },
+        handler: (_req, res) => {
+          // @ts-expect-error passing string to a object schema to test errors
+          res.send('test');
+        },
       });
 
       await app.ready();
@@ -228,14 +223,6 @@ describe('response schema', () => {
         name: 'test',
       });
     });
-
-    // // FixMe https://github.com/turkerdev/fastify-type-provider-zod/issues/16
-    // it('returns 500 for incorrect response', async () => {
-    //   const response = await app.inject().get('/incorrect');
-
-    //   expect(response.statusCode).toBe(500);
-    //   expect(response.json()).toMatchInlineSnapshot();
-    // });
   });
 
   describe('correctly replaces date in stringified response', () => {
@@ -259,21 +246,19 @@ describe('response schema', () => {
 
       app.setSerializerCompiler(serializerCompilerCustom);
 
-      app.after(() => {
-        app.withTypeProvider<ZodTypeProvider>().route({
-          method: 'GET',
-          url: '/',
-          schema: {
-            response: {
-              200: REPLY_SCHEMA,
-            },
+      app.withTypeProvider<ZodTypeProvider>().route({
+        method: 'GET',
+        url: '/',
+        schema: {
+          response: {
+            200: REPLY_SCHEMA,
           },
-          handler: (_req, res) => {
-            res.send({
-              createdAt: new Date('2021-01-01T00:00:00Z'),
-            });
-          },
-        });
+        },
+        handler: (_req, res) => {
+          res.send({
+            createdAt: new Date('2021-01-01T00:00:00Z'),
+          });
+        },
       });
 
       await app.ready();
@@ -300,19 +285,17 @@ describe('response schema', () => {
       app.setValidatorCompiler(validatorCompiler);
       app.setSerializerCompiler(serializerCompiler);
 
-      app.after(() => {
-        app.withTypeProvider<ZodTypeProvider>().route({
-          method: 'GET',
-          url: '/invalid',
-          schema: {
-            response: {
-              200: { notZod: true },
-            },
+      app.withTypeProvider<ZodTypeProvider>().route({
+        method: 'GET',
+        url: '/invalid',
+        schema: {
+          response: {
+            200: { notZod: true },
           },
-          handler: (_, res) => {
-            res.send({ test: 's' });
-          },
-        });
+        },
+        handler: (_, res) => {
+          res.send({ test: 's' });
+        },
       });
 
       await app.ready();
