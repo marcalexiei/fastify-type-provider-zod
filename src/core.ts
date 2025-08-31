@@ -6,14 +6,13 @@ import type {
   FastifyPluginAsync,
   FastifyPluginCallback,
   FastifyPluginOptions,
-  FastifySchema,
   FastifySchemaCompiler,
   FastifyTypeProvider,
   RawServerBase,
   RawServerDefault,
 } from 'fastify';
 import type { FastifySerializerCompiler } from 'fastify/types/schema.js';
-import type { $ZodRegistry, input, output } from 'zod/v4/core';
+import type { $ZodRegistry, input, JSONSchema, output } from 'zod/v4/core';
 import { $ZodType, globalRegistry, safeParse } from 'zod/v4/core';
 
 import {
@@ -25,14 +24,86 @@ import { getOpenAPISchemaVersion } from './openapi.ts';
 import { openAPISchemaPrune } from './openapi-schema-prune.ts';
 import { zodRegistryToJson, zodSchemaToJson } from './zod-to-json.ts';
 
+//=============================================================================
+// #region Types
+//=============================================================================
+
+/**
+ * FastifyPluginCallbackZod with Zod automatic type inference
+ *
+ * @example
+ * ```typescript
+ * import Fastify from 'fastify';
+ * import { ZodTypeProvider } from "@marcalexiei/fastify-type-provider-zod";
+ *
+ * const app = Fastify()
+ * app.withTypeProvider<ZodTypeProvider>()
+ * ```
+ */
 export interface ZodTypeProvider extends FastifyTypeProvider {
   validator: this['schema'] extends $ZodType ? output<this['schema']> : unknown;
   serializer: this['schema'] extends $ZodType ? input<this['schema']> : unknown;
 }
 
-interface Schema extends FastifySchema {
-  hide?: boolean;
+/**
+ * FastifyPluginCallbackZod with Zod automatic type inference
+ *
+ * @example
+ * ```typescript
+ * import { FastifyPluginCallbackZod } from "@marcalexiei/fastify-type-provider-zod"
+ *
+ * const plugin: FastifyPluginCallbackZod = (fastify, options, done) => {
+ *   done()
+ * }
+ * ```
+ */
+export type FastifyPluginCallbackZod<
+  Options extends FastifyPluginOptions = Record<never, never>,
+  Server extends RawServerBase = RawServerDefault,
+> = FastifyPluginCallback<Options, Server, ZodTypeProvider>;
+
+/**
+ * FastifyPluginAsyncZod with Zod automatic type inference
+ *
+ * @example
+ * ```typescript
+ * import { FastifyPluginAsyncZod } from "@marcalexiei/fastify-type-provider-zod"
+ *
+ * const plugin: FastifyPluginAsyncZod = async (fastify, options) => {
+ * }
+ * ```
+ */
+export type FastifyPluginAsyncZod<
+  Options extends FastifyPluginOptions = Record<never, never>,
+  Server extends RawServerBase = RawServerDefault,
+> = FastifyPluginAsync<Options, Server, ZodTypeProvider>;
+
+//=============================================================================
+// #endregion Types
+//=============================================================================
+
+function resolveSchema(
+  maybeSchema: $ZodType | { properties: $ZodType },
+): $ZodType {
+  if (maybeSchema instanceof $ZodType) {
+    return maybeSchema;
+  }
+
+  // I'm not sure about the need of this code.
+  // Unit tests are not failing without it so keep it here for reference
+  // if (
+  //   'properties' in maybeSchema &&
+  //   maybeSchema.properties instanceof $ZodType
+  // ) {
+  //   return maybeSchema.properties;
+  // }
+
+  throw new InvalidSchemaError(JSON.stringify(maybeSchema));
 }
+
+//=============================================================================
+// #region Transform
+//=============================================================================
 
 interface CreateJsonSchemaTransformOptions {
   schemaRegistry?: $ZodRegistry<{ id?: string | undefined }>;
@@ -40,7 +111,7 @@ interface CreateJsonSchemaTransformOptions {
 
 export const createJsonSchemaTransform = ({
   schemaRegistry = globalRegistry,
-}: CreateJsonSchemaTransformOptions): SwaggerTransform<Schema> => {
+}: CreateJsonSchemaTransformOptions): SwaggerTransform => {
   // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: no other way
   return (transformData) => {
     if ('swaggerObject' in transformData) {
@@ -70,15 +141,18 @@ export const createJsonSchemaTransform = ({
       return { schema: { hide }, url };
     }
 
-    const transformed: {
-      response?: Record<string, unknown>;
-      hide?: boolean;
+    const transformed: Partial<{
+      headers: JSONSchema.BaseSchema;
+      querystring: JSONSchema.BaseSchema;
+      body: JSONSchema.BaseSchema;
+      params: JSONSchema.BaseSchema;
+      response: Partial<Record<string, JSONSchema.BaseSchema>>;
       [key: string]: unknown;
-    } = {};
+    }> = { ...rest };
 
     type ZodSchemaRecord = Record<string, $ZodType>;
 
-    const zodSchemas = {
+    const requestSchemas = {
       headers,
       querystring,
       body,
@@ -87,11 +161,11 @@ export const createJsonSchemaTransform = ({
 
     const openAPISchemaVersion = getOpenAPISchemaVersion(transformData);
 
-    for (const prop in zodSchemas) {
-      const zodSchema = zodSchemas[prop];
-      if (zodSchema) {
+    for (const prop in requestSchemas) {
+      const maybeSchema = requestSchemas[prop];
+      if (maybeSchema) {
         transformed[prop] = zodSchemaToJson(
-          zodSchema,
+          resolveSchema(maybeSchema),
           schemaRegistry,
           'input',
           openAPISchemaVersion,
@@ -103,10 +177,9 @@ export const createJsonSchemaTransform = ({
       transformed.response = {};
 
       for (const prop in response) {
-        const zodSchema = resolveSchema((response as ZodSchemaRecord)[prop]);
-
+        const maybeSchema = response[prop as keyof typeof response];
         transformed.response[prop] = zodSchemaToJson(
-          zodSchema,
+          resolveSchema(maybeSchema),
           schemaRegistry,
           'output',
           openAPISchemaVersion,
@@ -114,19 +187,13 @@ export const createJsonSchemaTransform = ({
       }
     }
 
-    for (const prop in rest) {
-      const meta = rest[prop as keyof typeof rest];
-      if (meta) {
-        transformed[prop] = meta;
-      }
-    }
-
     return { schema: transformed, url };
   };
 };
 
-export const jsonSchemaTransform: SwaggerTransform<Schema> =
-  createJsonSchemaTransform({});
+export const jsonSchemaTransform: SwaggerTransform = createJsonSchemaTransform(
+  {},
+);
 
 interface CreateJsonSchemaTransformObjectOptions {
   schemaRegistry?: $ZodRegistry<{ id?: string | undefined }>;
@@ -191,6 +258,14 @@ export const createJsonSchemaTransformObject = (
 export const jsonSchemaTransformObject: SwaggerTransformObject =
   createJsonSchemaTransformObject({});
 
+//=============================================================================
+// #endregion Transform
+//=============================================================================
+
+//=============================================================================
+// #region Compiler
+//=============================================================================
+
 export const validatorCompiler: FastifySchemaCompiler<$ZodType> = ({
   schema: maybeSchema,
 }) => {
@@ -205,25 +280,6 @@ export const validatorCompiler: FastifySchemaCompiler<$ZodType> = ({
     return { value: result.data };
   };
 };
-
-function resolveSchema(
-  maybeSchema: $ZodType | { properties: $ZodType },
-): $ZodType {
-  if (maybeSchema instanceof $ZodType) {
-    return maybeSchema;
-  }
-
-  // I'm not sure about the need of this code.
-  // Unit tests are not failing without it so keep it here for reference
-  // if (
-  //   'properties' in maybeSchema &&
-  //   maybeSchema.properties instanceof $ZodType
-  // ) {
-  //   return maybeSchema.properties;
-  // }
-
-  throw new InvalidSchemaError(JSON.stringify(maybeSchema));
-}
 
 // biome-ignore-start lint/suspicious/noExplicitAny: Same as json stringify
 // #region ZodSerializerCompilerOptions
@@ -259,35 +315,6 @@ export const createSerializerCompiler: (
 export const serializerCompiler: ZodFastifySerializerCompiler =
   createSerializerCompiler();
 
-/**
- * FastifyPluginCallbackZod with Zod automatic type inference
- *
- * @example
- * ```typescript
- * import { FastifyPluginCallbackZod } from "@marcalexiei/fastify-type-provider-zod"
- *
- * const plugin: FastifyPluginCallbackZod = (fastify, options, done) => {
- *   done()
- * }
- * ```
- */
-export type FastifyPluginCallbackZod<
-  Options extends FastifyPluginOptions = Record<never, never>,
-  Server extends RawServerBase = RawServerDefault,
-> = FastifyPluginCallback<Options, Server, ZodTypeProvider>;
-
-/**
- * FastifyPluginAsyncZod with Zod automatic type inference
- *
- * @example
- * ```typescript
- * import { FastifyPluginAsyncZod } from "@marcalexiei/fastify-type-provider-zod"
- *
- * const plugin: FastifyPluginAsyncZod = async (fastify, options) => {
- * }
- * ```
- */
-export type FastifyPluginAsyncZod<
-  Options extends FastifyPluginOptions = Record<never, never>,
-  Server extends RawServerBase = RawServerDefault,
-> = FastifyPluginAsync<Options, Server, ZodTypeProvider>;
+//=============================================================================
+// #endregion Compiler
+//=============================================================================
