@@ -30,10 +30,12 @@
             "noRestrictedImports": {
               "level": "error",
               "options": {
-                "paths": {
-                  "zod": "This plugins supports both `zod` and `zod-mini`, so please import only from `zod/v4/core`",
-                  "zod/v4": "This plugins supports both `zod` and `zod-mini`, so please import only from `zod/v4/core`"
-                }
+                "patterns": [
+                  {
+                    "group": ["zod", "zod/*", "!zod/v4/core"],
+                    "message": "This plugins supports both `zod` and `zod-mini`, so please import only from `zod/v4/core`"
+                  }
+                ]
               }
             }
           }
@@ -49,12 +51,12 @@
             "noRestrictedImports": {
               "level": "error",
               "options": {
-                "paths": {
-                  "../src/core": "import only from `../src/index`",
-                  "../src/errors": "import only from `../src/index`",
-                  "../src/openapi": "import only from `../src/index`",
-                  "../src/zod-to-json": "import only from `../src/index`"
-                }
+                "patterns": [
+                  {
+                    "group": ["../src/*", "!../src/index.ts"],
+                    "message": "import only from `../src/index`"
+                  }
+                ]
               }
             },
             "useNamingConvention": "off"
