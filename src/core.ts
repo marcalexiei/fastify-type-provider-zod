@@ -20,8 +20,7 @@ import {
   InvalidSchemaError,
   ResponseSerializationError,
 } from './errors.ts';
-import { getOpenAPISchemaVersion } from './openapi.ts';
-import { openAPISchemaPrune } from './openapi-schema-prune.ts';
+import { getOpenAPISchemaVersion, openAPISchemaPrune } from './openapi.ts';
 import { zodRegistryToJson, zodSchemaToJson } from './zod-to-json.ts';
 
 //=============================================================================

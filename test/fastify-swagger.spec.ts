@@ -775,7 +775,7 @@ describe('transformer', () => {
     });
 
     schemaRegistry.add(USER_SCHEMA, { id: 'User' });
-    // this should generate a collision error since 
+    // this must generate a collision error
     schemaRegistry.add(USER_SCHEMA, { id: 'UserInput' });
 
     await app.register(fastifySwagger, {
@@ -808,9 +808,10 @@ describe('transformer', () => {
 
     await app.ready();
 
-    expect(() => app.swagger()).toThrow(`Cannot create schema "UserInput": Name already taken by another user defined schema.`)
-    
-  })
+    expect(() => app.swagger()).toThrow(
+      `Cannot create schema "UserInput": Name already taken by another user defined schema.`,
+    );
+  });
 
   describe('null type', () => {
     const createNullCaseApp = async (): Promise<FastifyInstance> => {
