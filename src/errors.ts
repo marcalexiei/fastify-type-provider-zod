@@ -1,7 +1,6 @@
 import type { FastifyErrorConstructor } from '@fastify/error';
 import createError from '@fastify/error';
 import type { FastifyError } from 'fastify';
-// When https://github.com/fastify/fastify/pull/6207 is released when can import from fastify
 import type { FastifySchemaValidationError } from 'fastify/types/schema.js';
 import type { $ZodError } from 'zod/v4/core';
 
@@ -24,14 +23,8 @@ export interface ZodFastifySchemaValidationError
 }
 
 const ResponseSerializationBase: FastifyErrorConstructor<
-  {
-    code: string;
-  },
-  [
-    {
-      cause: $ZodError;
-    },
-  ]
+  { code: string },
+  [{ cause: $ZodError }]
 > = createError<[{ cause: $ZodError }]>(
   'FST_ERR_RESPONSE_SERIALIZATION',
   "Response doesn't match the schema",

@@ -12,7 +12,6 @@ import type {
   RawServerBase,
   RawServerDefault,
 } from 'fastify';
-// When https://github.com/fastify/fastify/pull/6207 is released when can import from fastify
 import type { FastifySerializerCompiler } from 'fastify/types/schema.js';
 import type { $ZodRegistry, input, output } from 'zod/v4/core';
 import { $ZodType, globalRegistry, safeParse } from 'zod/v4/core';
@@ -26,16 +25,6 @@ import { getOpenAPISchemaVersion } from './openapi.ts';
 import { openAPISchemaPrune } from './openapi-schema-prune.ts';
 import { zodRegistryToJson, zodSchemaToJson } from './zod-to-json.ts';
 
-const defaultSkipList = [
-  '/documentation/',
-  '/documentation/initOAuth',
-  '/documentation/json',
-  '/documentation/uiConfig',
-  '/documentation/yaml',
-  '/documentation/*',
-  '/documentation/static/*',
-];
-
 export interface ZodTypeProvider extends FastifyTypeProvider {
   validator: this['schema'] extends $ZodType ? output<this['schema']> : unknown;
   serializer: this['schema'] extends $ZodType ? input<this['schema']> : unknown;
@@ -46,12 +35,10 @@ interface Schema extends FastifySchema {
 }
 
 interface CreateJsonSchemaTransformOptions {
-  skipList?: ReadonlyArray<string>;
   schemaRegistry?: $ZodRegistry<{ id?: string | undefined }>;
 }
 
 export const createJsonSchemaTransform = ({
-  skipList = defaultSkipList,
   schemaRegistry = globalRegistry,
 }: CreateJsonSchemaTransformOptions): SwaggerTransform<Schema> => {
   // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: no other way
@@ -68,19 +55,26 @@ export const createJsonSchemaTransform = ({
       return { schema, url };
     }
 
-    const { response, headers, querystring, body, params, hide, ...rest } =
-      schema;
+    const {
+      hide,
+      //
+      params,
+      headers,
+      querystring,
+      body,
+      response,
+      ...rest
+    } = schema;
+
+    if (hide) {
+      return { schema: { hide }, url };
+    }
 
     const transformed: {
       response?: Record<string, unknown>;
       hide?: boolean;
       [key: string]: unknown;
     } = {};
-
-    if (skipList.includes(url) || hide) {
-      transformed.hide = true;
-      return { schema: transformed, url };
-    }
 
     type ZodSchemaRecord = Record<string, $ZodType>;
 
