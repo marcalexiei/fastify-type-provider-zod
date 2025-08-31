@@ -224,7 +224,7 @@ describe('transformer', () => {
     expect(() => app.swagger()).toThrowError('OpenAPI 2.0 is not supported');
   });
 
-  it('should not generate ref', async () => {
+  it('should not generate ref when not using a zod registry', async () => {
     const app = Fastify();
     app.setValidatorCompiler(validatorCompiler);
     app.setSerializerCompiler(serializerCompiler);
@@ -700,6 +700,58 @@ describe('transformer', () => {
         });
       },
     });
+
+    await app.ready();
+
+    const openApiSpec = app.swagger();
+
+    await expect(openApiSpec).toBeValidOpenAPISchema();
+    expect(openApiSpec).toMatchSnapshot();
+  });
+
+  it('should not include route that have `schema.hide: true`', async () => {
+    const app = Fastify();
+    app.setValidatorCompiler(validatorCompiler);
+    app.setSerializerCompiler(serializerCompiler);
+
+    const VALUE_SCHEMA = z.object({ value: z.string() });
+
+    await app.register(fastifySwagger, {
+      openapi: {
+        info: {
+          title: 'SampleApi',
+          description: 'Sample backend service',
+          version: '1.0.0',
+        },
+        servers: [],
+      },
+      transform: jsonSchemaTransform,
+      transformObject: jsonSchemaTransformObject,
+    });
+
+    app
+      .withTypeProvider<ZodTypeProvider>()
+      .route({
+        method: 'POST',
+        url: '/',
+        schema: {
+          response: { 200: VALUE_SCHEMA },
+        },
+        handler: (_, res) => {
+          res.send({ value: '' });
+        },
+      })
+      .route({
+        method: 'POST',
+        url: '/debug',
+        schema: {
+          hide: true,
+          response: { 200: VALUE_SCHEMA },
+        },
+        handler: (_, res) => {
+          res.send({ value: '' });
+        },
+      });
 
     await app.ready();
 

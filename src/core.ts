@@ -135,7 +135,7 @@ interface CreateJsonSchemaTransformObjectOptions {
 export const createJsonSchemaTransformObject = (
   options: CreateJsonSchemaTransformObjectOptions,
 ): SwaggerTransformObject => {
-  const { schemaRegistry = globalRegistry } = options ?? {};
+  const { schemaRegistry = globalRegistry } = options;
 
   return (documentObject) => {
     /* v8 ignore next 5 */
