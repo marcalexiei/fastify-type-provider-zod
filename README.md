@@ -38,7 +38,7 @@ TL;DR; My contribution on the `turkerdev/fastify-type-provider-zod` repository a
 ~~If this changes, I'm more than willing to merge the changes here back to the upstream repo.~~
 
 As of 2025-08-31, no communication have come from the original repo maintainer.
-Also some merged PRs (e.g.: [205](https://github.com/turkerdev/fastify-type-provider-zod/pull/205)) make the fork implementation incompatible with this repo.
+Also some merged PRs (e.g.: [205](https://github.com/turkerdev/fastify-type-provider-zod/pull/205)) make the upstream repository incompatible with this repo.
 
 <details>
 
@@ -80,4 +80,4 @@ Ignored issues:
 
 ---
 
-As of 2025-08-31 the implementation from the original fork have diverged so I'll stop updating this section.
+As of 2025-08-31 the implementation from the upstream repository have diverged so I'll stop updating this section.
