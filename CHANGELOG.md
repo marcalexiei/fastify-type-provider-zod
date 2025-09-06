@@ -1,5 +1,11 @@
 # @marcalexiei/fastify-type-provider-zod
 
+## 2.0.1
+
+### Patch Changes
+
+- [`6d95ca1`](https://github.com/marcalexiei/fastify-type-provider-zod/commit/6d95ca19f3558158e22c587066c50d33d718ec51) Thanks [@marcalexiei](https://github.com/marcalexiei)! - chore: switch to release helper (userland is not affected)
+
 ## 2.0.0
 
 ### Major Changes
