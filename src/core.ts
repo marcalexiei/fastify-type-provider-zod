@@ -266,6 +266,7 @@ export const jsonSchemaTransformObject: SwaggerTransformObject =
 export const validatorCompiler: FastifySchemaCompiler<$ZodType> = ({
   schema: maybeSchema,
 }) => {
+  //
   return (data) => {
     const schema = resolveSchema(maybeSchema);
 
@@ -293,7 +294,9 @@ type ZodFastifySerializerCompiler = FastifySerializerCompiler<
 export const createSerializerCompiler: (
   options?: ZodSerializerCompilerOptions,
 ) => ZodFastifySerializerCompiler = (options) => {
+  //
   return ({ schema: maybeSchema, method, url }) => {
+    //
     return (data) => {
       const schema = resolveSchema(maybeSchema);
 
