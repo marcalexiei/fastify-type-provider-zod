@@ -5,10 +5,12 @@ import type { OpenAPISchemaVersion } from './openapi.ts';
 import { removeJSONSchemaPropertiesNotUsedByOpenAPI } from './openapi.ts';
 
 const getSchemaId = (id: string, io: 'input' | 'output') => {
+  //
   return io === 'input' ? `${id}Input` : id;
 };
 
 const getReferenceUri = (id: string, io: 'input' | 'output') => {
+  //
   return `#/components/schemas/${getSchemaId(id, io)}`;
 };
 
