@@ -1,5 +1,15 @@
 # @marcalexiei/fastify-type-provider-zod
 
+## 2.0.1
+
+### Patch Changes
+
+- [`6d95ca1`](https://github.com/marcalexiei/fastify-type-provider-zod/commit/6d95ca19f3558158e22c587066c50d33d718ec51) Thanks [@marcalexiei](https://github.com/marcalexiei)! - chore: switch to release helper (userland is not affected)
+
+- [#58](https://github.com/marcalexiei/fastify-type-provider-zod/pull/58) [`5165282`](https://github.com/marcalexiei/fastify-type-provider-zod/commit/5165282fdcae115683763e95a6378630616c7bbb) Thanks [@marcalexiei](https://github.com/marcalexiei)! - chore: enable trusted publishing (userland is not affected)
+
+- [#57](https://github.com/marcalexiei/fastify-type-provider-zod/pull/57) [`135aa7c`](https://github.com/marcalexiei/fastify-type-provider-zod/commit/135aa7cb7b32db7728cfdb1c64a02c08dce85984) Thanks [@marcalexiei](https://github.com/marcalexiei)! - docs(examples): uniform examples code style and enable logger
+
 ## 2.0.0
 
 ### Major Changes
