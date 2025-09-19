@@ -7,7 +7,7 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from '@marcalexiei/fastify-type-provider-zod';
-import fastify from 'fastify';
+import Fastify from 'fastify';
 import { z } from 'zod';
 
 const USER_SCHEMA = z
@@ -20,7 +20,7 @@ const USER_SCHEMA = z
     description: 'User information',
   });
 
-const app = fastify();
+const app = Fastify({ logger: true });
 app.setValidatorCompiler(validatorCompiler);
 app.setSerializerCompiler(serializerCompiler);
 
@@ -56,14 +56,8 @@ app.after(() => {
   });
 });
 
-async function run() {
-  await app.ready();
+await app.ready();
 
-  const url = await app.listen({
-    port: 4949,
-  });
+const url = await app.listen({ port: 4949 });
 
-  app.log.info(`Documentation running at ${url}`);
-}
-
-run().catch(() => {});
+app.log.info(`Documentation running at ${url}`);

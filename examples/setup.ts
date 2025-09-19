@@ -6,7 +6,7 @@ import {
 import Fastify from 'fastify';
 import { z } from 'zod';
 
-const app = Fastify();
+const app = Fastify({ logger: true });
 
 // Add schema validator and serializer
 app.setValidatorCompiler(validatorCompiler);
@@ -29,4 +29,6 @@ app.withTypeProvider<ZodTypeProvider>().route({
   },
 });
 
-app.listen({ port: 4949 });
+const url = await app.listen({ port: 4949 });
+
+app.log.info(`Documentation running at ${url}`);

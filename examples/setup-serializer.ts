@@ -5,7 +5,7 @@ import {
 } from '@marcalexiei/fastify-type-provider-zod';
 import Fastify from 'fastify';
 
-const app = Fastify();
+const app = Fastify({ logger: true });
 
 const replacer: ZodSerializerCompilerOptions['replacer'] = function (
   key,
@@ -26,4 +26,6 @@ app.setSerializerCompiler(customSerializerCompiler);
 
 // ...
 
-app.listen({ port: 4949 });
+const url = await app.listen({ port: 4949 });
+
+app.log.info(`Documentation running at ${url}`);
