@@ -2,9 +2,9 @@ import {
   hasZodFastifySchemaValidationErrors,
   isResponseSerializationError,
 } from '@marcalexiei/fastify-type-provider-zod';
-import fastify from 'fastify';
+import Fastify from 'fastify';
 
-const app = fastify();
+const app = Fastify();
 
 app.setErrorHandler((err, req, reply) => {
   if (hasZodFastifySchemaValidationErrors(err)) {
