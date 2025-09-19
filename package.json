@@ -4,8 +4,7 @@
   "description": "Zod Type Provider for Fastify@5",
   "type": "module",
   "publishConfig": {
-    "access": "public",
-    "provenance": true
+    "access": "public"
   },
   "keywords": [
     "fastify",
