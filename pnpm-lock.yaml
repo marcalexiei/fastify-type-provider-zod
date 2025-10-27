@@ -22,8 +22,8 @@ importers:
         specifier: 2.29.7
         version: 2.29.7(@types/node@24.3.1)
       '@fastify/swagger':
-        specifier: 9.5.1
-        version: 9.5.1
+        specifier: 9.5.2
+        version: 9.5.2
       '@fastify/swagger-ui':
         specifier: 5.2.3
         version: 5.2.3
@@ -38,13 +38,13 @@ importers:
         version: 24.3.1
       '@vitest/coverage-v8':
         specifier: 4.0.3
-        version: 4.0.3(vitest@4.0.3(@types/node@24.3.1)(yaml@2.8.0))
+        version: 4.0.3(vitest@4.0.3(@types/node@24.3.1)(yaml@2.8.1))
       fastify:
-        specifier: 5.6.0
-        version: 5.6.0
+        specifier: 5.6.1
+        version: 5.6.1
       fastify-plugin:
-        specifier: 5.0.1
-        version: 5.0.1
+        specifier: 5.1.0
+        version: 5.1.0
       openapi-types:
         specifier: 12.1.3
         version: 12.1.3
@@ -56,16 +56,16 @@ importers:
         version: 0.15.1(typescript@5.9.2)
       vite:
         specifier: 7.1.5
-        version: 7.1.5(@types/node@24.3.1)(yaml@2.8.0)
+        version: 7.1.5(@types/node@24.3.1)(yaml@2.8.1)
       vitepress:
         specifier: 2.0.0-alpha.11
-        version: 2.0.0-alpha.11(@types/node@24.3.1)(postcss@8.5.6)(typescript@5.9.2)(yaml@2.8.0)
+        version: 2.0.0-alpha.11(@types/node@24.3.1)(postcss@8.5.6)(typescript@5.9.2)(yaml@2.8.1)
       vitest:
         specifier: 4.0.3
-        version: 4.0.3(@types/node@24.3.1)(yaml@2.8.0)
+        version: 4.0.3(@types/node@24.3.1)(yaml@2.8.1)
       zod:
-        specifier: 4.1.5
-        version: 4.1.5
+        specifier: 4.1.12
+        version: 4.1.12
 
 packages:
 
@@ -382,8 +382,8 @@ packages:
   '@fastify/accept-negotiator@2.0.1':
     resolution: {integrity: sha512-/c/TW2bO/v9JeEgoD/g1G5GxGeCF1Hafdf79WPmUlgYiBXummY0oX3VVq4yFkKKVBKDNlaDUYoab7g38RpPqCQ==}
 
-  '@fastify/ajv-compiler@4.0.2':
-    resolution: {integrity: sha512-Rkiu/8wIjpsf46Rr+Fitd3HRP+VsxUFDDeag0hs9L0ksfnwx2g7SPQQTFL0E8Qv+rfXzQOxBJnjUB9ITUDjfWQ==}
+  '@fastify/ajv-compiler@4.0.5':
+    resolution: {integrity: sha512-KoWKW+MhvfTRWL4qrhUwAAZoaChluo0m0vbiJlGMt2GXvL4LVPQEjt8kSpHI3IBq5Rez8fg+XeH3cneztq+C7A==}
 
   '@fastify/error@4.2.0':
     resolution: {integrity: sha512-RSo3sVDXfHskiBZKBPRgnQTtIqpi/7zhJOEmAxCiBcM7d0uwdGdxLlsCaLzGs8v8NnxIRlfG0N51p5yFaOentQ==}
@@ -391,14 +391,14 @@ packages:
   '@fastify/fast-json-stringify-compiler@5.0.3':
     resolution: {integrity: sha512-uik7yYHkLr6fxd8hJSZ8c+xF4WafPK+XzneQDPU+D10r5X19GW8lJcom2YijX2+qtFF1ENJlHXKFM9ouXNJYgQ==}
 
-  '@fastify/forwarded@3.0.0':
-    resolution: {integrity: sha512-kJExsp4JCms7ipzg7SJ3y8DwmePaELHxKYtg+tZow+k0znUTf3cb+npgyqm8+ATZOdmfgfydIebPDWM172wfyA==}
+  '@fastify/forwarded@3.0.1':
+    resolution: {integrity: sha512-JqDochHFqXs3C3Ml3gOY58zM7OqO9ENqPo0UqAjAjH8L01fRZqwX9iLeX34//kiJubF7r2ZQHtBRU36vONbLlw==}
 
   '@fastify/merge-json-schemas@0.2.1':
     resolution: {integrity: sha512-OA3KGBCy6KtIvLf8DINC5880o5iBlDX4SxzLQS8HorJAbqluzLRn80UXU0bxZn7UOFhFgpRJDasfwn9nG4FG4A==}
 
-  '@fastify/proxy-addr@5.0.0':
-    resolution: {integrity: sha512-37qVVA1qZ5sgH7KpHkkC4z9SK6StIsIcOmpjvMPXNb3vx2GQxhZocogVYbr2PbbeLCQxYIPDok307xEvRZOzGA==}
+  '@fastify/proxy-addr@5.1.0':
+    resolution: {integrity: sha512-INS+6gh91cLUjB+PVHfu1UqcB76Sqtpyp7bnL+FYojhjygvOPA9ctiD/JDKsyD9Xgu4hUhCSJBPig/w7duNajw==}
 
   '@fastify/send@4.1.0':
     resolution: {integrity: sha512-TMYeQLCBSy2TOFmV95hQWkiTYgC/SEx7vMdV+wnZVX4tt8VBLKzmH8vV9OzJehV0+XBfg+WxPMt5wp+JBUKsVw==}
@@ -409,8 +409,8 @@ packages:
   '@fastify/swagger-ui@5.2.3':
     resolution: {integrity: sha512-e7ivEJi9EpFcxTONqICx4llbpB2jmlI+LI1NQ/mR7QGQnyDOqZybPK572zJtcdHZW4YyYTBHcP3a03f1pOh0SA==}
 
-  '@fastify/swagger@9.5.1':
-    resolution: {integrity: sha512-EGjYLA7vDmCPK7XViAYMF6y4+K3XUy5soVTVxsyXolNe/Svb4nFQxvtuQvvoQb2Gzc9pxiF3+ZQN/iZDHhKtTg==}
+  '@fastify/swagger@9.5.2':
+    resolution: {integrity: sha512-8e8w/LItg/cF6IR/hYKtnt+E0QImees5o3YWJsTLxaIk+tzNUEc6Z2Ursi4oOHWwUlKjUCnV6yh5z5ZdxvlsWA==}
 
   '@iconify-json/simple-icons@1.2.47':
     resolution: {integrity: sha512-wa/2O7G4sBmwSEWWLh5C+HeY00lVOoWYRKJOYQtk7lAbQrHUReD1ijiGOyTynV1YavxtNueL1CBA1UZmYJfOrQ==}
@@ -665,6 +665,9 @@ packages:
     engines: {node: '>=14.0.0'}
     cpu: [x64]
     os: [win32]
+
+  '@pinojs/redact@0.4.0':
+    resolution: {integrity: sha512-k2ENnmBugE/rzQfEcdWHcCY+/FM3VLzH9cYEsbdsoqrvzAKRhUZeRNhAZvB8OitQJ1TBed3yqWtdjzS6wJKBwg==}
 
   '@rolldown/pluginutils@1.0.0-beta.29':
     resolution: {integrity: sha512-NIJgOsMjbxAXvoGq/X0gD7VPMQ8j9g0BiDaNjVNVjvl+iKXxL3Jre0v31RmBYeLEmkbj2s02v8vFTbUXi5XS2Q==}
@@ -1216,24 +1219,20 @@ packages:
     resolution: {integrity: sha512-7MptL8U0cqcFdzIzwOTHoilX9x5BrNqye7Z/LuC7kCMRio1EMSyqRK3BEAUD7sXRq4iT4AzTVuZdhgQ2TCvYLg==}
     engines: {node: '>=8.6.0'}
 
-  fast-json-stringify@6.0.1:
-    resolution: {integrity: sha512-s7SJE83QKBZwg54dIbD5rCtzOBVD43V1ReWXXYqBgwCwHLYAAT0RQc/FmrQglXqWPpz6omtryJQOau5jI4Nrvg==}
+  fast-json-stringify@6.1.1:
+    resolution: {integrity: sha512-DbgptncYEXZqDUOEl4krff4mUiVrTZZVI7BBrQR/T3BqMj/eM1flTC1Uk2uUoLcWCxjT95xKulV/Lc6hhOZsBQ==}
 
   fast-querystring@1.1.2:
     resolution: {integrity: sha512-g6KuKWmFXc0fID8WWH0jit4g0AGBoJhCkJMb1RmbsSEUNvQ+ZC8D6CUZ+GtF8nMzSPXnhiePyyqqipzNNEnHjg==}
 
-  fast-redact@3.5.0:
-    resolution: {integrity: sha512-dwsoQlS7h9hMeYUq1W++23NDcBLV4KqONnITDV9DjfS3q1SgDGVrBdvvTLUotWtPSD7asWDV9/CmsZPy8Hf70A==}
-    engines: {node: '>=6'}
-
   fast-uri@3.1.0:
     resolution: {integrity: sha512-iPeeDKJSWf4IEOasVVrknXpaBV0IApz/gp7S2bb7Z4Lljbl2MGJRqInZiUrQwV16cpzw/D3S5j5Julj/gT52AA==}
 
-  fastify-plugin@5.0.1:
-    resolution: {integrity: sha512-HCxs+YnRaWzCl+cWRYFnHmeRFyR5GVnJTAaCJQiYzQSDwK9MgJdyAsuL3nh0EWRCYMgQ5MeziymvmAhUHYHDUQ==}
+  fastify-plugin@5.1.0:
+    resolution: {integrity: sha512-FAIDA8eovSt5qcDgcBvDuX/v0Cjz0ohGhENZ/wpc3y+oZCY2afZ9Baqql3g/lC+OHRnciQol4ww7tuthOb9idw==}
 
-  fastify@5.6.0:
-    resolution: {integrity: sha512-9j2r9TnwNsfGiCKGYT0Voqy244qwcoYM9qvNi/i+F8sNNWDnqUEVuGYNc9GyjldhXmMlJmVPS6gI1LdvjYGRJw==}
+  fastify@5.6.1:
+    resolution: {integrity: sha512-WjjlOciBF0K8pDUPZoGPhqhKrQJ02I8DKaDIfO51EL0kbSMwQFl85cRwhOvmSDWoukNOdTo27gLN549pLCcH7Q==}
 
   fastq@1.19.1:
     resolution: {integrity: sha512-GwLTyxkCXjXbxqIhTsMI2Nui8huMPtnxg7krajPJAjnEG/iiOS7i+zCtWGZR9G0NBKbXKh6X9m9UIsYX/N6vvQ==}
@@ -1399,8 +1398,8 @@ packages:
     resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
     hasBin: true
 
-  json-schema-ref-resolver@2.0.1:
-    resolution: {integrity: sha512-HG0SIB9X4J8bwbxCbnd5FfPEbcXAJYTi1pBJeP/QPON+w8ovSME8iRG+ElHNxZNX2Qh6eYn1GdzJFS4cDFfx0Q==}
+  json-schema-ref-resolver@3.0.0:
+    resolution: {integrity: sha512-hOrZIVL5jyYFjzk7+y7n5JDzGlU8rfWDuYyHwGa2WA8/pcmMHezp2xsVwxrebD/Q9t8Nc5DboieySDpCp4WG4A==}
 
   json-schema-resolver@3.0.0:
     resolution: {integrity: sha512-HqMnbz0tz2DaEJ3ntsqtx3ezzZyDE7G56A/pPY/NGmrPu76UzsWquOpHFRAf5beTNXoH2LU5cQePVvRli1nchA==}
@@ -1601,8 +1600,8 @@ packages:
   pino-std-serializers@7.0.0:
     resolution: {integrity: sha512-e906FRY0+tV27iq4juKzSYPbUj2do2X2JX4EzSca1631EB2QJQUqGbDuERal7LCtOpxl6x3+nvo9NPZcmjkiFA==}
 
-  pino@9.9.4:
-    resolution: {integrity: sha512-d1XorUQ7sSKqVcYdXuEYs2h1LKxejSorMEJ76XoZ0pPDf8VzJMe7GlPXpMBZeQ9gE4ZPIp5uGD+5Nw7scxiigg==}
+  pino@9.14.0:
+    resolution: {integrity: sha512-8OEwKp5juEvb/MjpIc4hjqfgCNysrS94RIOMXYvpYCdm/jglrKEiAYmiumbmGhCvs+IcInsphYDFwqrjr7398w==}
     hasBin: true
 
   postcss@8.5.6:
@@ -1689,8 +1688,8 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  secure-json-parse@4.0.0:
-    resolution: {integrity: sha512-dxtLJO6sc35jWidmLxo7ij+Eg48PM/kleBsxpC8QJE0qJICe+KawkDQmvCMZUr9u7WKVHgMW6vy3fQ7zMiFZMA==}
+  secure-json-parse@4.1.0:
+    resolution: {integrity: sha512-l4KnYfEyqYJxDwlNVyRfO2E4NTHfMKAWdUuA8J0yve2Dz/E/PdBepY03RvyJpssIpRFwJoCD55wA+mEDs6ByWA==}
 
   semver@7.7.2:
     resolution: {integrity: sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==}
@@ -2022,8 +2021,13 @@ packages:
     engines: {node: '>= 14.6'}
     hasBin: true
 
-  zod@4.1.5:
-    resolution: {integrity: sha512-rcUUZqlLJgBC33IT3PNMgsCq6TzLQEG/Ei/KTCU0PedSWRMAXoOUN+4t/0H+Q8bdnLPdqUYnvboJT0bn/229qg==}
+  yaml@2.8.1:
+    resolution: {integrity: sha512-lcYcMxX2PO9XMGvAJkJ3OsNMw+/7FKes7/hgerGUYWIoWu5j/+YQqcZr5JnPZWzOsEBgMbSbiSTn/dv/69Mkpw==}
+    engines: {node: '>= 14.6'}
+    hasBin: true
+
+  zod@4.1.12:
+    resolution: {integrity: sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -2341,7 +2345,7 @@ snapshots:
 
   '@fastify/accept-negotiator@2.0.1': {}
 
-  '@fastify/ajv-compiler@4.0.2':
+  '@fastify/ajv-compiler@4.0.5':
     dependencies:
       ajv: 8.17.1
       ajv-formats: 3.0.1(ajv@8.17.1)
@@ -2351,17 +2355,17 @@ snapshots:
 
   '@fastify/fast-json-stringify-compiler@5.0.3':
     dependencies:
-      fast-json-stringify: 6.0.1
+      fast-json-stringify: 6.1.1
 
-  '@fastify/forwarded@3.0.0': {}
+  '@fastify/forwarded@3.0.1': {}
 
   '@fastify/merge-json-schemas@0.2.1':
     dependencies:
       dequal: 2.0.3
 
-  '@fastify/proxy-addr@5.0.0':
+  '@fastify/proxy-addr@5.1.0':
     dependencies:
-      '@fastify/forwarded': 3.0.0
+      '@fastify/forwarded': 3.0.1
       ipaddr.js: 2.2.0
 
   '@fastify/send@4.1.0':
@@ -2377,25 +2381,25 @@ snapshots:
       '@fastify/accept-negotiator': 2.0.1
       '@fastify/send': 4.1.0
       content-disposition: 0.5.4
-      fastify-plugin: 5.0.1
+      fastify-plugin: 5.1.0
       fastq: 1.19.1
       glob: 11.0.3
 
   '@fastify/swagger-ui@5.2.3':
     dependencies:
       '@fastify/static': 8.2.0
-      fastify-plugin: 5.0.1
+      fastify-plugin: 5.1.0
       openapi-types: 12.1.3
       rfdc: 1.4.1
       yaml: 2.8.0
 
-  '@fastify/swagger@9.5.1':
+  '@fastify/swagger@9.5.2':
     dependencies:
-      fastify-plugin: 5.0.1
+      fastify-plugin: 5.1.0
       json-schema-resolver: 3.0.0
       openapi-types: 12.1.3
       rfdc: 1.4.1
-      yaml: 2.8.0
+      yaml: 2.8.1
     transitivePeerDependencies:
       - supports-color
 
@@ -2583,6 +2587,8 @@ snapshots:
   '@oxc-transform/binding-win32-x64-msvc@0.82.2':
     optional: true
 
+  '@pinojs/redact@0.4.0': {}
+
   '@rolldown/pluginutils@1.0.0-beta.29': {}
 
   '@rollup/rollup-android-arm-eabi@4.50.1':
@@ -2738,13 +2744,13 @@ snapshots:
 
   '@ungap/structured-clone@1.3.0': {}
 
-  '@vitejs/plugin-vue@6.0.1(vite@7.1.5(@types/node@24.3.1)(yaml@2.8.0))(vue@3.5.18(typescript@5.9.2))':
+  '@vitejs/plugin-vue@6.0.1(vite@7.1.5(@types/node@24.3.1)(yaml@2.8.1))(vue@3.5.18(typescript@5.9.2))':
     dependencies:
       '@rolldown/pluginutils': 1.0.0-beta.29
-      vite: 7.1.5(@types/node@24.3.1)(yaml@2.8.0)
+      vite: 7.1.5(@types/node@24.3.1)(yaml@2.8.1)
       vue: 3.5.18(typescript@5.9.2)
 
-  '@vitest/coverage-v8@4.0.3(vitest@4.0.3(@types/node@24.3.1)(yaml@2.8.0))':
+  '@vitest/coverage-v8@4.0.3(vitest@4.0.3(@types/node@24.3.1)(yaml@2.8.1))':
     dependencies:
       '@bcoe/v8-coverage': 1.0.2
       '@vitest/utils': 4.0.3
@@ -2757,7 +2763,7 @@ snapshots:
       magicast: 0.3.5
       std-env: 3.10.0
       tinyrainbow: 3.0.3
-      vitest: 4.0.3(@types/node@24.3.1)(yaml@2.8.0)
+      vitest: 4.0.3(@types/node@24.3.1)(yaml@2.8.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -2770,13 +2776,13 @@ snapshots:
       chai: 6.2.0
       tinyrainbow: 3.0.3
 
-  '@vitest/mocker@4.0.3(vite@7.1.5(@types/node@24.3.1)(yaml@2.8.0))':
+  '@vitest/mocker@4.0.3(vite@7.1.5(@types/node@24.3.1)(yaml@2.8.1))':
     dependencies:
       '@vitest/spy': 4.0.3
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 7.1.5(@types/node@24.3.1)(yaml@2.8.0)
+      vite: 7.1.5(@types/node@24.3.1)(yaml@2.8.1)
 
   '@vitest/pretty-format@4.0.3':
     dependencies:
@@ -3091,41 +3097,39 @@ snapshots:
       merge2: 1.4.1
       micromatch: 4.0.8
 
-  fast-json-stringify@6.0.1:
+  fast-json-stringify@6.1.1:
     dependencies:
       '@fastify/merge-json-schemas': 0.2.1
       ajv: 8.17.1
       ajv-formats: 3.0.1(ajv@8.17.1)
       fast-uri: 3.1.0
-      json-schema-ref-resolver: 2.0.1
+      json-schema-ref-resolver: 3.0.0
       rfdc: 1.4.1
 
   fast-querystring@1.1.2:
     dependencies:
       fast-decode-uri-component: 1.0.1
 
-  fast-redact@3.5.0: {}
-
   fast-uri@3.1.0: {}
 
-  fastify-plugin@5.0.1: {}
+  fastify-plugin@5.1.0: {}
 
-  fastify@5.6.0:
+  fastify@5.6.1:
     dependencies:
-      '@fastify/ajv-compiler': 4.0.2
+      '@fastify/ajv-compiler': 4.0.5
       '@fastify/error': 4.2.0
       '@fastify/fast-json-stringify-compiler': 5.0.3
-      '@fastify/proxy-addr': 5.0.0
+      '@fastify/proxy-addr': 5.1.0
       abstract-logging: 2.0.1
       avvio: 9.1.0
-      fast-json-stringify: 6.0.1
+      fast-json-stringify: 6.1.1
       find-my-way: 9.3.0
       light-my-request: 6.6.0
-      pino: 9.9.4
+      pino: 9.14.0
       process-warning: 5.0.0
       rfdc: 1.4.1
-      secure-json-parse: 4.0.0
-      semver: 7.7.2
+      secure-json-parse: 4.1.0
+      semver: 7.7.3
       toad-cache: 3.7.0
 
   fastq@1.19.1:
@@ -3301,13 +3305,13 @@ snapshots:
     dependencies:
       argparse: 2.0.1
 
-  json-schema-ref-resolver@2.0.1:
+  json-schema-ref-resolver@3.0.0:
     dependencies:
       dequal: 2.0.3
 
   json-schema-resolver@3.0.0:
     dependencies:
-      debug: 4.4.1
+      debug: 4.4.3
       fast-uri: 3.1.0
       rfdc: 1.4.1
     transitivePeerDependencies:
@@ -3514,10 +3518,10 @@ snapshots:
 
   pino-std-serializers@7.0.0: {}
 
-  pino@9.9.4:
+  pino@9.14.0:
     dependencies:
+      '@pinojs/redact': 0.4.0
       atomic-sleep: 1.0.0
-      fast-redact: 3.5.0
       on-exit-leak-free: 2.1.2
       pino-abstract-transport: 2.0.0
       pino-std-serializers: 7.0.0
@@ -3618,7 +3622,7 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  secure-json-parse@4.0.0: {}
+  secure-json-parse@4.1.0: {}
 
   semver@7.7.2: {}
 
@@ -3809,7 +3813,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.3
 
-  vite@7.1.5(@types/node@24.3.1)(yaml@2.8.0):
+  vite@7.1.5(@types/node@24.3.1)(yaml@2.8.1):
     dependencies:
       esbuild: 0.25.9
       fdir: 6.5.0(picomatch@4.0.3)
@@ -3820,9 +3824,9 @@ snapshots:
     optionalDependencies:
       '@types/node': 24.3.1
       fsevents: 2.3.3
-      yaml: 2.8.0
+      yaml: 2.8.1
 
-  vitepress@2.0.0-alpha.11(@types/node@24.3.1)(postcss@8.5.6)(typescript@5.9.2)(yaml@2.8.0):
+  vitepress@2.0.0-alpha.11(@types/node@24.3.1)(postcss@8.5.6)(typescript@5.9.2)(yaml@2.8.1):
     dependencies:
       '@docsearch/css': 4.0.0-beta.7
       '@docsearch/js': 4.0.0-beta.7
@@ -3831,7 +3835,7 @@ snapshots:
       '@shikijs/transformers': 3.10.0
       '@shikijs/types': 3.10.0
       '@types/markdown-it': 14.1.2
-      '@vitejs/plugin-vue': 6.0.1(vite@7.1.5(@types/node@24.3.1)(yaml@2.8.0))(vue@3.5.18(typescript@5.9.2))
+      '@vitejs/plugin-vue': 6.0.1(vite@7.1.5(@types/node@24.3.1)(yaml@2.8.1))(vue@3.5.18(typescript@5.9.2))
       '@vue/devtools-api': 8.0.0
       '@vue/shared': 3.5.18
       '@vueuse/core': 13.7.0(vue@3.5.18(typescript@5.9.2))
@@ -3840,7 +3844,7 @@ snapshots:
       mark.js: 8.11.1
       minisearch: 7.1.2
       shiki: 3.10.0
-      vite: 7.1.5(@types/node@24.3.1)(yaml@2.8.0)
+      vite: 7.1.5(@types/node@24.3.1)(yaml@2.8.1)
       vue: 3.5.18(typescript@5.9.2)
     optionalDependencies:
       postcss: 8.5.6
@@ -3869,10 +3873,10 @@ snapshots:
       - universal-cookie
       - yaml
 
-  vitest@4.0.3(@types/node@24.3.1)(yaml@2.8.0):
+  vitest@4.0.3(@types/node@24.3.1)(yaml@2.8.1):
     dependencies:
       '@vitest/expect': 4.0.3
-      '@vitest/mocker': 4.0.3(vite@7.1.5(@types/node@24.3.1)(yaml@2.8.0))
+      '@vitest/mocker': 4.0.3(vite@7.1.5(@types/node@24.3.1)(yaml@2.8.1))
       '@vitest/pretty-format': 4.0.3
       '@vitest/runner': 4.0.3
       '@vitest/snapshot': 4.0.3
@@ -3889,7 +3893,7 @@ snapshots:
       tinyexec: 0.3.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vite: 7.1.5(@types/node@24.3.1)(yaml@2.8.0)
+      vite: 7.1.5(@types/node@24.3.1)(yaml@2.8.1)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 24.3.1
@@ -3949,6 +3953,8 @@ snapshots:
 
   yaml@2.8.0: {}
 
-  zod@4.1.5: {}
+  yaml@2.8.1: {}
+
+  zod@4.1.12: {}
 
   zwitch@2.0.4: {}
