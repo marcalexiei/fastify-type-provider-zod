@@ -204,7 +204,7 @@ export const createJsonSchemaTransformObject = (
   const { schemaRegistry = globalRegistry } = options;
 
   return (documentObject) => {
-    /* v8 ignore next 5 */
+    /* v8 ignore next 5 -- @preserve */
     if ('swaggerObject' in documentObject) {
       throw new Error(
         'createJsonSchemaTransformObject - OpenAPI 2.0 is not supported',
