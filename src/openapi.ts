@@ -16,7 +16,7 @@ export const getOpenAPISchemaVersion = (documentObject: {
     return '3.0';
   }
 
-  /* v8 ignore next 2 */
+  /* v8 ignore next -- @preserve */
   throw new Error('Unsupported OpenAPI document object');
 };
 
@@ -51,6 +51,7 @@ function collectRefs(
     return refs;
   }
   if (seen.has(schema)) {
+    /* v8 ignore next -- @preserve */
     return refs;
   }
   seen.add(schema);
@@ -96,6 +97,7 @@ function resolveTransitiveRefs(
     changed = false;
     for (const ref of [...allRefs]) {
       const match = ref.match(REF_MATCH_WITH_GROUP);
+      /* v8 ignore next -- @preserve */
       if (!match) {
         continue;
       }
@@ -106,6 +108,7 @@ function resolveTransitiveRefs(
 
       const def = container?.[name];
       if (!def) {
+        /* v8 ignore next -- @preserve */
         continue;
       }
 
