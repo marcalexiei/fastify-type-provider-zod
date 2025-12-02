@@ -160,8 +160,7 @@ export const createJsonSchemaTransform = ({
 
     const openAPISchemaVersion = getOpenAPISchemaVersion(transformData);
 
-    for (const prop in requestSchemas) {
-      const maybeSchema = requestSchemas[prop];
+    for (const [prop, maybeSchema] of Object.entries(requestSchemas)) {
       if (maybeSchema) {
         transformed[prop] = zodSchemaToJson(
           resolveSchema(maybeSchema),
@@ -175,8 +174,7 @@ export const createJsonSchemaTransform = ({
     if (response) {
       transformed.response = {};
 
-      for (const prop in response) {
-        const maybeSchema = response[prop as keyof typeof response];
+      for (const [prop, maybeSchema] of Object.entries(response)) {
         transformed.response[prop] = zodSchemaToJson(
           resolveSchema(maybeSchema),
           schemaRegistry,
@@ -224,7 +222,7 @@ export const createJsonSchemaTransformObject = (
       openAPISchemaVersion,
     );
 
-    for (const key in outputSchemas) {
+    for (const key of Object.keys(outputSchemas)) {
       if (inputSchemas[key]) {
         throw new Error(
           `Cannot create schema "${key}": Name already taken by another user defined schema.`,

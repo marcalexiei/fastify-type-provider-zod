@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/nursery/noContinue: hate nested cycles with lot of conditions */
 import type { OpenAPIV3, OpenAPIV3_1 } from 'openapi-types';
 import type { JSONSchema } from 'zod/v4/core';
 
@@ -92,7 +93,6 @@ function resolveTransitiveRefs(
   const allRefs = new Set(initialRefs);
   let changed = true;
 
-  // biome-ignore lint/nursery/noUnnecessaryConditions: changed is reassigned below
   while (changed) {
     changed = false;
     for (const ref of [...allRefs]) {

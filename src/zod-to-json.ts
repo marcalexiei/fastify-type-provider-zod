@@ -177,9 +177,9 @@ export const zodRegistryToJson: (
 
   const jsonSchemas: Record<string, JSONSchema.BaseSchema> = {};
 
-  for (const id in result) {
+  for (const [id, schema] of Object.entries(result)) {
     jsonSchemas[getSchemaId(id, io)] =
-      removeJSONSchemaPropertiesNotUsedByOpenAPI(result[id], {
+      removeJSONSchemaPropertiesNotUsedByOpenAPI(schema, {
         openAPISchemaVersion,
       });
   }
