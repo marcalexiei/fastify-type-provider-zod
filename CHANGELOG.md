@@ -1,5 +1,13 @@
 # @marcalexiei/fastify-type-provider-zod
 
+## 2.0.2
+
+### Patch Changes
+
+- [#72](https://github.com/marcalexiei/fastify-type-provider-zod/pull/72) [`e887d2a`](https://github.com/marcalexiei/fastify-type-provider-zod/commit/e887d2ad082c19499ab150291df4c138315e2704) Thanks [@marcalexiei](https://github.com/marcalexiei)! - docs: add err.validationContext to schema validation error message strings
+
+- [#69](https://github.com/marcalexiei/fastify-type-provider-zod/pull/69) [`4cafc79`](https://github.com/marcalexiei/fastify-type-provider-zod/commit/4cafc793ae225d53fefb3b38ab50fb669727c0e0) Thanks [@marcalexiei](https://github.com/marcalexiei)! - refactor: use for-of instead of for-in
+
 ## 2.0.1
 
 ### Patch Changes
