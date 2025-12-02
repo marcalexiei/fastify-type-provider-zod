@@ -63,7 +63,7 @@ describe('response schema with custom error handler', () => {
       if (hasZodFastifySchemaValidationErrors(err)) {
         return reply.code(400).send({
           error: 'Response Validation Error',
-          message: "Request doesn't match the schema",
+          message: `Request ${err.validationContext} doesn't match the schema`,
           statusCode: 400,
           details: {
             issues: err.validation,
@@ -106,7 +106,7 @@ describe('response schema with custom error handler', () => {
           "url": "/",
         },
         "error": "Response Validation Error",
-        "message": "Request doesn't match the schema",
+        "message": "Request body doesn't match the schema",
         "statusCode": 400,
       }
     `);

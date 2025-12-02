@@ -10,7 +10,7 @@ app.setErrorHandler((err, req, reply) => {
   if (hasZodFastifySchemaValidationErrors(err)) {
     return reply.code(400).send({
       error: 'Response Validation Error',
-      message: "Request doesn't match the schema",
+      message: `Request ${err.validationContext} doesn't match the schema`,
       statusCode: 400,
       details: {
         issues: err.validation,
