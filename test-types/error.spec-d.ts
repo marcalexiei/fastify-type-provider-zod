@@ -1,4 +1,4 @@
-import type { FastifySchemaValidationError } from 'fastify/types/schema.js';
+import type { FastifySchemaValidationError } from 'fastify';
 import { describe, expectTypeOf, it } from 'vitest';
 
 import type { ZodFastifySchemaValidationError } from '../src/index.ts';
