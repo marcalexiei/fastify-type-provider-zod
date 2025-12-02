@@ -68,8 +68,7 @@ export type FastifyPluginCallbackZod<
  * ```typescript
  * import { FastifyPluginAsyncZod } from "@marcalexiei/fastify-type-provider-zod"
  *
- * const plugin: FastifyPluginAsyncZod = async (fastify, options) => {
- * }
+ * const plugin: FastifyPluginAsyncZod = async (fastify, options) => {}
  * ```
  */
 export type FastifyPluginAsyncZod<
@@ -193,13 +192,30 @@ export const jsonSchemaTransform: SwaggerTransform = createJsonSchemaTransform(
 );
 
 interface CreateJsonSchemaTransformObjectOptions {
+  /**
+   * Zod registry that will be be used to generate `components.schemas`.
+   *
+   * @default import('zod').globalRegistry
+   */
   schemaRegistry?: $ZodRegistry<{ id?: string | undefined }>;
+
+  /**
+   * Use `id` to populate schema `title` field when generating OpenAPI schema.
+   * Might be useful when using OpenAPI tool like scalar who rely on this to show components names
+   *
+   * @default false
+   */
+  setIdAsTitleInSchemas?: boolean;
 }
 
 export const createJsonSchemaTransformObject = (
   options: CreateJsonSchemaTransformObjectOptions,
 ): SwaggerTransformObject => {
-  const { schemaRegistry = globalRegistry } = options;
+  const {
+    schemaRegistry = globalRegistry,
+    //
+    setIdAsTitleInSchemas = false,
+  } = options;
 
   return (documentObject) => {
     /* v8 ignore next 5 -- @preserve */
@@ -211,16 +227,16 @@ export const createJsonSchemaTransformObject = (
 
     const openAPISchemaVersion = getOpenAPISchemaVersion(documentObject);
 
-    const inputSchemas = zodRegistryToJson(
-      schemaRegistry,
-      'input',
+    const inputSchemas = zodRegistryToJson(schemaRegistry, {
+      io: 'input',
       openAPISchemaVersion,
-    );
-    const outputSchemas = zodRegistryToJson(
-      schemaRegistry,
-      'output',
+      setIdAsTitleInSchemas,
+    });
+    const outputSchemas = zodRegistryToJson(schemaRegistry, {
+      io: 'output',
       openAPISchemaVersion,
-    );
+      setIdAsTitleInSchemas,
+    });
 
     for (const key of Object.keys(outputSchemas)) {
       if (inputSchemas[key]) {

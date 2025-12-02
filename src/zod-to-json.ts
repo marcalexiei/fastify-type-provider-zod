@@ -158,12 +158,14 @@ export const zodSchemaToJson: (
 
 export const zodRegistryToJson: (
   registry: $ZodRegistry<{ id?: string }>,
-  io: 'input' | 'output',
-  openAPISchemaVersion: OpenAPISchemaVersion,
+  options: {
+    io: 'input' | 'output';
+    openAPISchemaVersion: OpenAPISchemaVersion;
+    setIdAsTitleInSchemas: boolean;
+  },
 ) => Record<string, JSONSchema.BaseSchema> = (
   registry,
-  io,
-  openAPISchemaVersion,
+  { io, openAPISchemaVersion, setIdAsTitleInSchemas },
 ) => {
   const result = toJSONSchema(registry, {
     target: getZodJSONSchemaTarget(openAPISchemaVersion),
@@ -178,10 +180,15 @@ export const zodRegistryToJson: (
   const jsonSchemas: Record<string, JSONSchema.BaseSchema> = {};
 
   for (const [id, schema] of Object.entries(result)) {
-    jsonSchemas[getSchemaId(id, io)] =
-      removeJSONSchemaPropertiesNotUsedByOpenAPI(schema, {
-        openAPISchemaVersion,
-      });
+    const schemaId = getSchemaId(id, io);
+    const schemaData = removeJSONSchemaPropertiesNotUsedByOpenAPI(schema, {
+      openAPISchemaVersion,
+    });
+    jsonSchemas[schemaId] = schemaData;
+
+    if (setIdAsTitleInSchemas && !schemaData.title) {
+      jsonSchemas[schemaId].title = schemaId;
+    }
   }
 
   return jsonSchemas;
