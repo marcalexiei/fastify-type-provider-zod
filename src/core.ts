@@ -270,7 +270,7 @@ export const validatorCompiler: FastifySchemaCompiler<$ZodType> = ({
 
     const result = safeParse(schema, data);
     if (result.error) {
-      return { error: createValidationError(result.error) as unknown as Error };
+      return { error: createValidationError(result.error) };
     }
 
     return { value: result.data };
