@@ -1,7 +1,6 @@
 import type { FastifyErrorConstructor } from '@fastify/error';
 import createError from '@fastify/error';
-import type { FastifyError } from 'fastify';
-import type { FastifySchemaValidationError } from 'fastify/types/schema.js';
+import type { FastifyError, FastifySchemaValidationError } from 'fastify';
 import type { $ZodError } from 'zod/v4/core';
 
 export const InvalidSchemaError: FastifyErrorConstructor<

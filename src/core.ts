@@ -7,11 +7,11 @@ import type {
   FastifyPluginCallback,
   FastifyPluginOptions,
   FastifySchemaCompiler,
+  FastifySerializerCompiler,
   FastifyTypeProvider,
   RawServerBase,
   RawServerDefault,
 } from 'fastify';
-import type { FastifySerializerCompiler } from 'fastify/types/schema.js';
 import type { $ZodRegistry, input, JSONSchema, output } from 'zod/v4/core';
 import { $ZodType, globalRegistry, safeParse } from 'zod/v4/core';
 
@@ -270,7 +270,7 @@ export const validatorCompiler: FastifySchemaCompiler<$ZodType> = ({
 
     const result = safeParse(schema, data);
     if (result.error) {
-      return { error: createValidationError(result.error) as unknown as Error };
+      return { error: createValidationError(result.error) };
     }
 
     return { value: result.data };
