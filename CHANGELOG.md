@@ -1,5 +1,15 @@
 # @marcalexiei/fastify-type-provider-zod
 
+## 3.0.0
+
+### Major Changes
+
+- [#73](https://github.com/marcalexiei/fastify-type-provider-zod/pull/73) [`cb77e48`](https://github.com/marcalexiei/fastify-type-provider-zod/commit/cb77e488b219ecba673093a82611da7fa5ff1012) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat!: requires fastify ^5.5.0
+
+### Minor Changes
+
+- [#75](https://github.com/marcalexiei/fastify-type-provider-zod/pull/75) [`a225c43`](https://github.com/marcalexiei/fastify-type-provider-zod/commit/a225c43c8ad66c314131c1b03013bba42709ee41) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat(createJsonSchemaTransformObject): add `setIdAsTitleInSchemas`
+
 ## 2.0.2
 
 ### Patch Changes
