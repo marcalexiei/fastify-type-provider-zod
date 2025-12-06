@@ -42,7 +42,7 @@ To prevent data loss, provide all metadata at the time of schema registration.
 :::
 
 :::tip
-`ZodOpenApiSchemaMetadata` type can be used to have proper intelli
+`ZodOpenApiSchemaMetadata` type can be used to have proper IDE suggestions.
 :::
 
 ```ts

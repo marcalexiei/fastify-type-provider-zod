@@ -1,7 +1,8 @@
 import fastifySwagger from '@fastify/swagger';
 import type { FastifyInstance } from 'fastify';
 import Fastify from 'fastify';
-import { describe, expect, it } from 'vitest';
+import type { OpenAPIV3, OpenAPIV3_1 } from 'openapi-types';
+import { afterEach, describe, expect, it } from 'vitest';
 import { z } from 'zod/v4';
 
 import type {
@@ -19,21 +20,33 @@ import {
 
 import './_custom-openapi-schema-matchers.ts';
 
+function createOpenAPIDoc(
+  version: '3.0.3' | '3.1.0' = '3.0.3',
+): OpenAPIV3.Document | OpenAPIV3_1.Document {
+  return {
+    openapi: version,
+    info: {
+      title: 'SampleApi',
+      description: 'Sample backend service',
+      version: '1.0.0',
+    },
+    servers: [],
+    components: {},
+  };
+}
+
 describe('transformer', () => {
+  afterEach(() => {
+    z.globalRegistry.clear();
+  });
+
   it('generates types for fastify-swagger correctly', async () => {
     const app = Fastify();
     app.setValidatorCompiler(validatorCompiler);
     app.setSerializerCompiler(serializerCompiler);
 
     await app.register(fastifySwagger, {
-      openapi: {
-        info: {
-          title: 'SampleApi',
-          description: 'Sample backend service',
-          version: '1.0.0',
-        },
-        servers: [],
-      },
+      openapi: createOpenAPIDoc(),
       transform: jsonSchemaTransform,
     });
 
@@ -111,15 +124,7 @@ describe('transformer', () => {
     app.setSerializerCompiler(serializerCompiler);
 
     await app.register(fastifySwagger, {
-      openapi: {
-        openapi: '3.1.0',
-        info: {
-          title: 'SampleApi',
-          description: 'Sample backend service',
-          version: '1.0.0',
-        },
-        servers: [],
-      },
+      openapi: createOpenAPIDoc('3.1.0'),
       transform: jsonSchemaTransform,
     });
 
@@ -231,14 +236,7 @@ describe('transformer', () => {
     app.setSerializerCompiler(serializerCompiler);
 
     await app.register(fastifySwagger, {
-      openapi: {
-        info: {
-          title: 'SampleApi',
-          description: 'Sample backend service',
-          version: '1.0.0',
-        },
-        servers: [],
-      },
+      openapi: createOpenAPIDoc(),
       transform: jsonSchemaTransform,
     });
 
@@ -282,14 +280,7 @@ describe('transformer', () => {
     });
 
     await app.register(fastifySwagger, {
-      openapi: {
-        info: {
-          title: 'SampleApi',
-          description: 'Sample backend service',
-          version: '1.0.0',
-        },
-        servers: [],
-      },
+      openapi: createOpenAPIDoc(),
       transform: createJsonSchemaTransform({ schemaRegistry }),
       transformObject: createJsonSchemaTransformObject({ schemaRegistry }),
     });
@@ -327,14 +318,7 @@ describe('transformer', () => {
     });
 
     await app.register(fastifySwagger, {
-      openapi: {
-        info: {
-          title: 'SampleApi',
-          description: 'Sample backend service',
-          version: '1.0.0',
-        },
-        servers: [],
-      },
+      openapi: createOpenAPIDoc(),
       transform: jsonSchemaTransform,
       transformObject: jsonSchemaTransformObject,
     });
@@ -357,10 +341,131 @@ describe('transformer', () => {
 
     const openApiSpec = app.swagger();
 
-    z.globalRegistry.remove(TOKEN_SCHEMA);
-
     await expect(openApiSpec).toBeValidOpenAPISchema();
     expect(openApiSpec).toMatchSnapshot();
+  });
+
+  describe('`setIdAsNameInSchemas: true`', () => {
+    it('should generate ref correctly using registry and `setIdAsNameInSchemas: true`', async () => {
+      const app = Fastify();
+      app.setValidatorCompiler(validatorCompiler);
+      app.setSerializerCompiler(serializerCompiler);
+
+      const TOKEN_SCHEMA = z.string().length(12).meta({
+        id: 'Token',
+        description: 'Token description',
+      });
+
+      await app.register(fastifySwagger, {
+        openapi: createOpenAPIDoc('3.1.0'),
+        transform: jsonSchemaTransform,
+        transformObject: createJsonSchemaTransformObject({
+          setIdAsTitleInSchemas: true,
+        }),
+      });
+
+      app.withTypeProvider<ZodTypeProvider>().route({
+        method: 'POST',
+        url: '/login',
+        schema: {
+          body: z.object({
+            access_token: TOKEN_SCHEMA,
+            refresh_token: TOKEN_SCHEMA,
+          }),
+        },
+        handler: (_req, res) => {
+          res.send('ok');
+        },
+      });
+
+      await app.ready();
+
+      const openApiSpec = app.swagger();
+
+      expect(openApiSpec).toMatchSnapshot();
+      await expect(openApiSpec).toBeValidOpenAPISchema();
+    });
+
+    it('should not override title if already present', async () => {
+      const app = Fastify();
+      app.setValidatorCompiler(validatorCompiler);
+      app.setSerializerCompiler(serializerCompiler);
+
+      const TOKEN_SCHEMA = z.string().length(12).meta({
+        id: 'Token',
+        description: 'Token description',
+      });
+
+      await app.register(fastifySwagger, {
+        openapi: createOpenAPIDoc('3.1.0'),
+        transform: jsonSchemaTransform,
+        transformObject: createJsonSchemaTransformObject({
+          setIdAsTitleInSchemas: true,
+        }),
+      });
+
+      app.withTypeProvider<ZodTypeProvider>().route({
+        method: 'POST',
+        url: '/login',
+        schema: {
+          body: z.object({
+            access_token: TOKEN_SCHEMA,
+            refresh_token: TOKEN_SCHEMA,
+          }),
+        },
+        handler: (_req, res) => {
+          res.send('ok');
+        },
+      });
+
+      await app.ready();
+
+      const openApiSpec = app.swagger();
+
+      expect(openApiSpec).toMatchSnapshot();
+      await expect(openApiSpec).toBeValidOpenAPISchema();
+    });
+  });
+
+  it('should generate ref correctly using registry and `setIdAsNameInSchemas: true`', async () => {
+    const app = Fastify();
+    app.setValidatorCompiler(validatorCompiler);
+    app.setSerializerCompiler(serializerCompiler);
+
+    const TOKEN_SCHEMA = z.string().length(12).meta({
+      id: 'Token',
+      title: 'TokenTitle',
+      description: 'Token description',
+    });
+
+    await app.register(fastifySwagger, {
+      openapi: createOpenAPIDoc('3.1.0'),
+      transform: jsonSchemaTransform,
+      transformObject: createJsonSchemaTransformObject({
+        setIdAsTitleInSchemas: true,
+      }),
+    });
+
+    app.withTypeProvider<ZodTypeProvider>().route({
+      method: 'POST',
+      url: '/login',
+      schema: {
+        body: z.object({
+          access_token: TOKEN_SCHEMA,
+          refresh_token: TOKEN_SCHEMA,
+        }),
+      },
+      handler: (_req, res) => {
+        res.send('ok');
+      },
+    });
+
+    await app.ready();
+
+    const openApiSpec = app.swagger();
+
+    expect(openApiSpec).toMatchSnapshot();
+    await expect(openApiSpec).toBeValidOpenAPISchema();
   });
 
   it('should generate nested and circular refs correctly', async () => {
@@ -386,14 +491,7 @@ describe('transformer', () => {
     schemaRegistry.add(USER_SCHEMA, { id: 'User' });
 
     await app.register(fastifySwagger, {
-      openapi: {
-        info: {
-          title: 'SampleApi',
-          description: 'Sample backend service',
-          version: '1.0.0',
-        },
-        servers: [],
-      },
+      openapi: createOpenAPIDoc(),
       transform: createJsonSchemaTransform({ schemaRegistry }),
       transformObject: createJsonSchemaTransformObject({ schemaRegistry }),
     });
@@ -438,14 +536,7 @@ describe('transformer', () => {
     const ID_SCHEMA = z.string().default('1');
 
     await app.register(fastifySwagger, {
-      openapi: {
-        info: {
-          title: 'SampleApi',
-          description: 'Sample backend service',
-          version: '1.0.0',
-        },
-        servers: [],
-      },
+      openapi: createOpenAPIDoc(),
       transform: createJsonSchemaTransform({ schemaRegistry }),
       transformObject: createJsonSchemaTransformObject({ schemaRegistry }),
     });
@@ -495,14 +586,7 @@ describe('transformer', () => {
     });
 
     await app.register(fastifySwagger, {
-      openapi: {
-        info: {
-          title: 'SampleApi',
-          description: 'Sample backend service',
-          version: '1.0.0',
-        },
-        servers: [],
-      },
+      openapi: createOpenAPIDoc(),
       transform: createJsonSchemaTransform({ schemaRegistry }),
       transformObject: createJsonSchemaTransformObject({ schemaRegistry }),
     });
@@ -553,14 +637,7 @@ describe('transformer', () => {
     schemaRegistry.add(USER_SCHEMA, { id: 'User' });
 
     await app.register(fastifySwagger, {
-      openapi: {
-        info: {
-          title: 'SampleApi',
-          description: 'Sample backend service',
-          version: '1.0.0',
-        },
-        servers: [],
-      },
+      openapi: createOpenAPIDoc(),
       transform: createJsonSchemaTransform({ schemaRegistry }),
       transformObject: createJsonSchemaTransformObject({ schemaRegistry }),
     });
@@ -604,11 +681,7 @@ describe('transformer', () => {
 
     await app.register(fastifySwagger, {
       openapi: {
-        info: {
-          title: 'SampleApi',
-          description: 'Sample backend service',
-          version: '1.0.0',
-        },
+        ...createOpenAPIDoc(),
         components: {
           securitySchemes: {
             authorization: {
@@ -618,7 +691,6 @@ describe('transformer', () => {
             },
           },
         },
-        servers: [],
       },
       transform: createJsonSchemaTransform({ schemaRegistry }),
       transformObject: createJsonSchemaTransformObject({ schemaRegistry }),
@@ -667,11 +739,7 @@ describe('transformer', () => {
 
     await app.register(fastifySwagger, {
       openapi: {
-        info: {
-          title: 'SampleApi',
-          description: 'Sample backend service',
-          version: '1.0.0',
-        },
+        ...createOpenAPIDoc(),
         components: {
           securitySchemes: {
             authorization: {
@@ -681,7 +749,6 @@ describe('transformer', () => {
             },
           },
         },
-        servers: [],
       },
       transform: createJsonSchemaTransform({ schemaRegistry }),
       transformObject: createJsonSchemaTransformObject({ schemaRegistry }),
@@ -718,14 +785,7 @@ describe('transformer', () => {
     const VALUE_SCHEMA = z.object({ value: z.string() });
 
     await app.register(fastifySwagger, {
-      openapi: {
-        info: {
-          title: 'SampleApi',
-          description: 'Sample backend service',
-          version: '1.0.0',
-        },
-        servers: [],
-      },
+      openapi: createOpenAPIDoc(),
       transform: jsonSchemaTransform,
       transformObject: jsonSchemaTransformObject,
     });
@@ -779,14 +839,7 @@ describe('transformer', () => {
     schemaRegistry.add(USER_SCHEMA, { id: 'UserInput' });
 
     await app.register(fastifySwagger, {
-      openapi: {
-        info: {
-          title: 'SampleApi',
-          description: 'Sample backend service',
-          version: '1.0.0',
-        },
-        servers: [],
-      },
+      openapi: createOpenAPIDoc(),
       transform: createJsonSchemaTransform({ schemaRegistry }),
       transformObject: createJsonSchemaTransformObject({ schemaRegistry }),
     });
@@ -820,14 +873,7 @@ describe('transformer', () => {
       app.setSerializerCompiler(serializerCompiler);
 
       await app.register(fastifySwagger, {
-        openapi: {
-          info: {
-            title: 'SampleApi',
-            description: 'Sample backend service',
-            version: '1.0.0',
-          },
-          servers: [],
-        },
+        openapi: createOpenAPIDoc(),
         transform: jsonSchemaTransform,
         transformObject: jsonSchemaTransformObject,
       });
@@ -915,14 +961,7 @@ describe('transformer', () => {
       app.setSerializerCompiler(serializerCompiler);
 
       await app.register(fastifySwagger, {
-        openapi: {
-          openapi: '3.1.0',
-          info: {
-            title: 'SampleApi',
-            version: '1.0.1',
-          },
-          servers: [],
-        },
+        openapi: createOpenAPIDoc('3.1.0'),
         transform: createJsonSchemaTransform({ schemaRegistry }),
         transformObject: createJsonSchemaTransformObject({ schemaRegistry }),
       });
@@ -967,14 +1006,7 @@ describe('transformer', () => {
       app.setSerializerCompiler(serializerCompiler);
 
       await app.register(fastifySwagger, {
-        openapi: {
-          openapi: '3.1.0',
-          info: {
-            title: 'SampleApi',
-            version: '1.0.1',
-          },
-          servers: [],
-        },
+        openapi: createOpenAPIDoc('3.1.0'),
         transform: createJsonSchemaTransform({ schemaRegistry }),
         transformObject: createJsonSchemaTransformObject({ schemaRegistry }),
       });

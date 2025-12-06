@@ -1,5 +1,117 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`transformer > \`setIdAsNameInSchemas: true\` > should generate ref correctly using registry and \`setIdAsNameInSchemas: true\` 1`] = `
+{
+  "components": {
+    "schemas": {
+      "TokenInput": {
+        "description": "Token description",
+        "maxLength": 12,
+        "minLength": 12,
+        "title": "TokenInput",
+        "type": "string",
+      },
+    },
+  },
+  "info": {
+    "description": "Sample backend service",
+    "title": "SampleApi",
+    "version": "1.0.0",
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/login": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "access_token": {
+                    "$ref": "#/components/schemas/TokenInput",
+                  },
+                  "refresh_token": {
+                    "$ref": "#/components/schemas/TokenInput",
+                  },
+                },
+                "required": [
+                  "access_token",
+                  "refresh_token",
+                ],
+                "type": "object",
+              },
+            },
+          },
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+          },
+        },
+      },
+    },
+  },
+  "servers": [],
+}
+`;
+
+exports[`transformer > \`setIdAsNameInSchemas: true\` > should not override title if already present 1`] = `
+{
+  "components": {
+    "schemas": {
+      "TokenInput": {
+        "description": "Token description",
+        "maxLength": 12,
+        "minLength": 12,
+        "title": "TokenInput",
+        "type": "string",
+      },
+    },
+  },
+  "info": {
+    "description": "Sample backend service",
+    "title": "SampleApi",
+    "version": "1.0.0",
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/login": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "access_token": {
+                    "$ref": "#/components/schemas/TokenInput",
+                  },
+                  "refresh_token": {
+                    "$ref": "#/components/schemas/TokenInput",
+                  },
+                },
+                "required": [
+                  "access_token",
+                  "refresh_token",
+                ],
+                "type": "object",
+              },
+            },
+          },
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+          },
+        },
+      },
+    },
+  },
+  "servers": [],
+}
+`;
+
 exports[`transformer > description and examples fields with custom schema registry > should populate description and examples 3.0 1`] = `
 {
   "components": {
@@ -36,8 +148,9 @@ exports[`transformer > description and examples fields with custom schema regist
     },
   },
   "info": {
+    "description": "Sample backend service",
     "title": "SampleApi",
-    "version": "1.0.1",
+    "version": "1.0.0",
   },
   "openapi": "3.1.0",
   "paths": {
@@ -141,8 +254,9 @@ exports[`transformer > description and examples fields with custom schema regist
     },
   },
   "info": {
+    "description": "Sample backend service",
     "title": "SampleApi",
-    "version": "1.0.1",
+    "version": "1.0.0",
   },
   "openapi": "3.1.0",
   "paths": {
@@ -735,6 +849,62 @@ exports[`transformer > should generate ref correctly using global registry 1`] =
     "version": "1.0.0",
   },
   "openapi": "3.0.3",
+  "paths": {
+    "/login": {
+      "post": {
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "access_token": {
+                    "$ref": "#/components/schemas/TokenInput",
+                  },
+                  "refresh_token": {
+                    "$ref": "#/components/schemas/TokenInput",
+                  },
+                },
+                "required": [
+                  "access_token",
+                  "refresh_token",
+                ],
+                "type": "object",
+              },
+            },
+          },
+          "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "Default Response",
+          },
+        },
+      },
+    },
+  },
+  "servers": [],
+}
+`;
+
+exports[`transformer > should generate ref correctly using registry and \`setIdAsNameInSchemas: true\` 1`] = `
+{
+  "components": {
+    "schemas": {
+      "TokenInput": {
+        "description": "Token description",
+        "maxLength": 12,
+        "minLength": 12,
+        "title": "TokenTitle",
+        "type": "string",
+      },
+    },
+  },
+  "info": {
+    "description": "Sample backend service",
+    "title": "SampleApi",
+    "version": "1.0.0",
+  },
+  "openapi": "3.1.0",
   "paths": {
     "/login": {
       "post": {
