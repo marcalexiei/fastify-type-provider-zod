@@ -7,8 +7,8 @@ import type {
 import {
   createJsonSchemaTransform,
   createJsonSchemaTransformObject,
-  serializerCompiler,
-  validatorCompiler,
+  createSerializerCompiler,
+  createValidatorCompiler,
 } from '@marcalexiei/fastify-type-provider-zod';
 import Fastify from 'fastify';
 import { registry, z } from 'zod';
@@ -26,8 +26,8 @@ const USER_SCHEMA = z
   });
 
 const app = Fastify({ logger: true });
-app.setValidatorCompiler(validatorCompiler);
-app.setSerializerCompiler(serializerCompiler);
+app.setValidatorCompiler(createValidatorCompiler());
+app.setSerializerCompiler(createSerializerCompiler());
 
 app.register(fastifySwagger, {
   openapi: {

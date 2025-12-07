@@ -12,10 +12,8 @@ import type {
 import {
   createJsonSchemaTransform,
   createJsonSchemaTransformObject,
-  jsonSchemaTransform,
-  jsonSchemaTransformObject,
-  serializerCompiler,
-  validatorCompiler,
+  createSerializerCompiler,
+  createValidatorCompiler,
 } from '../src/index.ts';
 
 import './_custom-openapi-schema-matchers.ts';
@@ -42,12 +40,12 @@ describe('transformer', () => {
 
   it('generates types for fastify-swagger correctly', async () => {
     const app = Fastify();
-    app.setValidatorCompiler(validatorCompiler);
-    app.setSerializerCompiler(serializerCompiler);
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
 
     await app.register(fastifySwagger, {
       openapi: createOpenAPIDoc(),
-      transform: jsonSchemaTransform,
+      transform: createJsonSchemaTransform(),
     });
 
     const LOGIN_SCHEMA = z.object({
@@ -120,12 +118,12 @@ describe('transformer', () => {
 
   it('generates types for fastify-swagger correctly 3.1', async () => {
     const app = Fastify();
-    app.setValidatorCompiler(validatorCompiler);
-    app.setSerializerCompiler(serializerCompiler);
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
 
     await app.register(fastifySwagger, {
       openapi: createOpenAPIDoc('3.1.0'),
-      transform: jsonSchemaTransform,
+      transform: createJsonSchemaTransform(),
     });
 
     const LOGIN_SCHEMA = z.object({
@@ -196,8 +194,8 @@ describe('transformer', () => {
 
   it('should fail generating types for fastify-swagger Swagger 2.0 correctly', async () => {
     const app = Fastify();
-    app.setValidatorCompiler(validatorCompiler);
-    app.setSerializerCompiler(serializerCompiler);
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
 
     await app.register(fastifySwagger, {
       swagger: {
@@ -208,7 +206,7 @@ describe('transformer', () => {
           version: '1.0.0',
         },
       },
-      transform: jsonSchemaTransform,
+      transform: createJsonSchemaTransform(),
     });
 
     app.withTypeProvider<ZodTypeProvider>().route({
@@ -232,12 +230,12 @@ describe('transformer', () => {
 
   it('should not generate ref when not using a zod registry', async () => {
     const app = Fastify();
-    app.setValidatorCompiler(validatorCompiler);
-    app.setSerializerCompiler(serializerCompiler);
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
 
     await app.register(fastifySwagger, {
       openapi: createOpenAPIDoc(),
-      transform: jsonSchemaTransform,
+      transform: createJsonSchemaTransform(),
     });
 
     const TOKEN_SCHEMA = z.string().length(12);
@@ -268,8 +266,8 @@ describe('transformer', () => {
 
   it('should generate ref correctly using z.registry', async () => {
     const app = Fastify();
-    app.setValidatorCompiler(validatorCompiler);
-    app.setSerializerCompiler(serializerCompiler);
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
 
     const TOKEN_SCHEMA = z.string().length(12);
 
@@ -309,8 +307,8 @@ describe('transformer', () => {
 
   it('should generate ref correctly using global registry', async () => {
     const app = Fastify();
-    app.setValidatorCompiler(validatorCompiler);
-    app.setSerializerCompiler(serializerCompiler);
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
 
     const TOKEN_SCHEMA = z.string().length(12).meta({
       id: 'Token',
@@ -319,8 +317,8 @@ describe('transformer', () => {
 
     await app.register(fastifySwagger, {
       openapi: createOpenAPIDoc(),
-      transform: jsonSchemaTransform,
-      transformObject: jsonSchemaTransformObject,
+      transform: createJsonSchemaTransform(),
+      transformObject: createJsonSchemaTransformObject(),
     });
 
     app.withTypeProvider<ZodTypeProvider>().route({
@@ -348,8 +346,8 @@ describe('transformer', () => {
   describe('`setIdAsNameInSchemas: true`', () => {
     it('should generate ref correctly using registry and `setIdAsNameInSchemas: true`', async () => {
       const app = Fastify();
-      app.setValidatorCompiler(validatorCompiler);
-      app.setSerializerCompiler(serializerCompiler);
+      app.setValidatorCompiler(createValidatorCompiler());
+      app.setSerializerCompiler(createSerializerCompiler());
 
       const TOKEN_SCHEMA = z.string().length(12).meta({
         id: 'Token',
@@ -358,7 +356,7 @@ describe('transformer', () => {
 
       await app.register(fastifySwagger, {
         openapi: createOpenAPIDoc('3.1.0'),
-        transform: jsonSchemaTransform,
+        transform: createJsonSchemaTransform(),
         transformObject: createJsonSchemaTransformObject({
           setIdAsTitleInSchemas: true,
         }),
@@ -388,8 +386,8 @@ describe('transformer', () => {
 
     it('should not override title if already present', async () => {
       const app = Fastify();
-      app.setValidatorCompiler(validatorCompiler);
-      app.setSerializerCompiler(serializerCompiler);
+      app.setValidatorCompiler(createValidatorCompiler());
+      app.setSerializerCompiler(createSerializerCompiler());
 
       const TOKEN_SCHEMA = z.string().length(12).meta({
         id: 'Token',
@@ -398,7 +396,7 @@ describe('transformer', () => {
 
       await app.register(fastifySwagger, {
         openapi: createOpenAPIDoc('3.1.0'),
-        transform: jsonSchemaTransform,
+        transform: createJsonSchemaTransform(),
         transformObject: createJsonSchemaTransformObject({
           setIdAsTitleInSchemas: true,
         }),
@@ -429,8 +427,8 @@ describe('transformer', () => {
 
   it('should generate ref correctly using registry and `setIdAsNameInSchemas: true`', async () => {
     const app = Fastify();
-    app.setValidatorCompiler(validatorCompiler);
-    app.setSerializerCompiler(serializerCompiler);
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
 
     const TOKEN_SCHEMA = z.string().length(12).meta({
       id: 'Token',
@@ -440,7 +438,7 @@ describe('transformer', () => {
 
     await app.register(fastifySwagger, {
       openapi: createOpenAPIDoc('3.1.0'),
-      transform: jsonSchemaTransform,
+      transform: createJsonSchemaTransform(),
       transformObject: createJsonSchemaTransformObject({
         setIdAsTitleInSchemas: true,
       }),
@@ -470,8 +468,8 @@ describe('transformer', () => {
 
   it('should generate nested and circular refs correctly', async () => {
     const app = Fastify();
-    app.setValidatorCompiler(validatorCompiler);
-    app.setSerializerCompiler(serializerCompiler);
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
 
     const GROUP_SCHEMA = z.object({
       id: z.string(),
@@ -528,8 +526,8 @@ describe('transformer', () => {
 
   it('should generate input and output schemas correctly', async () => {
     const app = Fastify();
-    app.setValidatorCompiler(validatorCompiler);
-    app.setSerializerCompiler(serializerCompiler);
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
 
     const schemaRegistry = z.registry<{ id: string }>();
 
@@ -571,8 +569,8 @@ describe('transformer', () => {
 
   it('should generate referenced input and output schemas correctly', async () => {
     const app = Fastify();
-    app.setValidatorCompiler(validatorCompiler);
-    app.setSerializerCompiler(serializerCompiler);
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
 
     const schemaRegistry = z.registry<{ id: string }>();
 
@@ -624,8 +622,8 @@ describe('transformer', () => {
 
   it('should generate referenced input and output schemas correctly when referencing a registered schema', async () => {
     const app = Fastify();
-    app.setValidatorCompiler(validatorCompiler);
-    app.setSerializerCompiler(serializerCompiler);
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
 
     const schemaRegistry = z.registry<{ id: string }>();
 
@@ -667,8 +665,8 @@ describe('transformer', () => {
 
   it('should not remove securitySchemes from the final openAPI object', async () => {
     const app = Fastify();
-    app.setValidatorCompiler(validatorCompiler);
-    app.setSerializerCompiler(serializerCompiler);
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
 
     const schemaRegistry = z.registry<{ id: string }>();
 
@@ -721,8 +719,8 @@ describe('transformer', () => {
 
   it('should not remove schema only referenced from components.schemas from the final openAPI object', async () => {
     const app = Fastify();
-    app.setValidatorCompiler(validatorCompiler);
-    app.setSerializerCompiler(serializerCompiler);
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
 
     const schemaRegistry = z.registry<{ id: string }>();
 
@@ -779,15 +777,15 @@ describe('transformer', () => {
 
   it('should not include route that have `schema.hide: true`', async () => {
     const app = Fastify();
-    app.setValidatorCompiler(validatorCompiler);
-    app.setSerializerCompiler(serializerCompiler);
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
 
     const VALUE_SCHEMA = z.object({ value: z.string() });
 
     await app.register(fastifySwagger, {
       openapi: createOpenAPIDoc(),
-      transform: jsonSchemaTransform,
-      transformObject: jsonSchemaTransformObject,
+      transform: createJsonSchemaTransform(),
+      transformObject: createJsonSchemaTransformObject(),
     });
 
     app
@@ -824,8 +822,8 @@ describe('transformer', () => {
 
   it('should generate error if a generated input schema name collides with a user defined schema', async () => {
     const app = Fastify();
-    app.setValidatorCompiler(validatorCompiler);
-    app.setSerializerCompiler(serializerCompiler);
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
 
     const schemaRegistry = z.registry<{ id: string }>();
 
@@ -869,13 +867,13 @@ describe('transformer', () => {
   describe('null type', () => {
     const createNullCaseApp = async (): Promise<FastifyInstance> => {
       const app = Fastify();
-      app.setValidatorCompiler(validatorCompiler);
-      app.setSerializerCompiler(serializerCompiler);
+      app.setValidatorCompiler(createValidatorCompiler());
+      app.setSerializerCompiler(createSerializerCompiler());
 
       await app.register(fastifySwagger, {
         openapi: createOpenAPIDoc(),
-        transform: jsonSchemaTransform,
-        transformObject: jsonSchemaTransformObject,
+        transform: createJsonSchemaTransform(),
+        transformObject: createJsonSchemaTransformObject(),
       });
 
       return app;
@@ -957,8 +955,8 @@ describe('transformer', () => {
 
     it('should populate description and examples 3.0', async () => {
       const app = Fastify();
-      app.setValidatorCompiler(validatorCompiler);
-      app.setSerializerCompiler(serializerCompiler);
+      app.setValidatorCompiler(createValidatorCompiler());
+      app.setSerializerCompiler(createSerializerCompiler());
 
       await app.register(fastifySwagger, {
         openapi: createOpenAPIDoc('3.1.0'),
@@ -1002,8 +1000,8 @@ describe('transformer', () => {
 
     it('should populate description and examples 3.1', async () => {
       const app = Fastify();
-      app.setValidatorCompiler(validatorCompiler);
-      app.setSerializerCompiler(serializerCompiler);
+      app.setValidatorCompiler(createValidatorCompiler());
+      app.setSerializerCompiler(createSerializerCompiler());
 
       await app.register(fastifySwagger, {
         openapi: createOpenAPIDoc('3.1.0'),

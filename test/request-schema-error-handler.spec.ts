@@ -5,9 +5,9 @@ import { z } from 'zod/v4';
 
 import type { ZodTypeProvider } from '../src/index.ts';
 import {
+  createSerializerCompiler,
+  createValidatorCompiler,
   hasZodFastifySchemaValidationErrors,
-  serializerCompiler,
-  validatorCompiler,
 } from '../src/index.ts';
 
 describe('response schema with custom error handler', () => {
@@ -18,8 +18,8 @@ describe('response schema with custom error handler', () => {
     });
 
     app = Fastify();
-    app.setValidatorCompiler(validatorCompiler);
-    app.setSerializerCompiler(serializerCompiler);
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
 
     app.after(() => {
       app

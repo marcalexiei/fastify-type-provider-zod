@@ -1,7 +1,7 @@
 import type { ZodSerializerCompilerOptions } from '@marcalexiei/fastify-type-provider-zod';
 import {
   createSerializerCompiler,
-  validatorCompiler,
+  createValidatorCompiler,
 } from '@marcalexiei/fastify-type-provider-zod';
 import Fastify from 'fastify';
 
@@ -21,7 +21,7 @@ const replacer: ZodSerializerCompilerOptions['replacer'] = function (
 const customSerializerCompiler = createSerializerCompiler({ replacer });
 
 // Add schema validator and serializer
-app.setValidatorCompiler(validatorCompiler);
+app.setValidatorCompiler(createValidatorCompiler());
 app.setSerializerCompiler(customSerializerCompiler);
 
 // ...

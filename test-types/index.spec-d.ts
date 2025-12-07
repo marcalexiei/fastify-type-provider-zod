@@ -10,7 +10,10 @@ import { assertType, describe, expectTypeOf, it } from 'vitest';
 import { z } from 'zod/v4';
 
 import type { ZodTypeProvider } from '../src/index.ts';
-import { serializerCompiler, validatorCompiler } from '../src/index.ts';
+import {
+  createSerializerCompiler,
+  createValidatorCompiler,
+} from '../src/index.ts';
 
 describe('index', () => {
   it('FastifyZodInstance is compatible with FastifyInstance', () => {
@@ -24,9 +27,11 @@ describe('index', () => {
       ZodTypeProvider
     >;
 
-    assertType<FastifyZodInstance>(app.setValidatorCompiler(validatorCompiler));
     assertType<FastifyZodInstance>(
-      app.setSerializerCompiler(serializerCompiler),
+      app.setValidatorCompiler(createValidatorCompiler()),
+    );
+    assertType<FastifyZodInstance>(
+      app.setSerializerCompiler(createSerializerCompiler()),
     );
 
     expectTypeOf(app).toExtend<FastifyInstance>();

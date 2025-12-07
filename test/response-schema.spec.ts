@@ -6,9 +6,8 @@ import { z } from 'zod/v4';
 import type { ZodTypeProvider } from '../src/index.ts';
 import {
   createSerializerCompiler,
+  createValidatorCompiler,
   isResponseSerializationError,
-  serializerCompiler,
-  validatorCompiler,
 } from '../src/index.ts';
 
 describe('response schema', () => {
@@ -16,8 +15,8 @@ describe('response schema', () => {
     let app: FastifyInstance;
     beforeAll(async () => {
       app = Fastify();
-      app.setValidatorCompiler(validatorCompiler);
-      app.setSerializerCompiler(serializerCompiler);
+      app.setValidatorCompiler(createValidatorCompiler());
+      app.setSerializerCompiler(createSerializerCompiler());
 
       app
         .withTypeProvider<ZodTypeProvider>()
@@ -108,8 +107,8 @@ describe('response schema', () => {
       const REPLY_SCHEMA = z.string();
 
       app = Fastify();
-      app.setValidatorCompiler(validatorCompiler);
-      app.setSerializerCompiler(serializerCompiler);
+      app.setValidatorCompiler(createValidatorCompiler());
+      app.setSerializerCompiler(createSerializerCompiler());
 
       app.withTypeProvider<ZodTypeProvider>().route({
         method: 'GET',
@@ -177,8 +176,8 @@ describe('response schema', () => {
       });
 
       app = Fastify();
-      app.setValidatorCompiler(validatorCompiler);
-      app.setSerializerCompiler(serializerCompiler);
+      app.setValidatorCompiler(createValidatorCompiler());
+      app.setSerializerCompiler(createSerializerCompiler());
 
       app.withTypeProvider<ZodTypeProvider>().route({
         method: 'GET',
@@ -234,7 +233,7 @@ describe('response schema', () => {
       });
 
       app = Fastify();
-      app.setValidatorCompiler(validatorCompiler);
+      app.setValidatorCompiler(createValidatorCompiler());
 
       const serializerCompilerCustom = createSerializerCompiler({
         replacer(key: string, value: unknown): unknown {
@@ -283,8 +282,8 @@ describe('response schema', () => {
     let app: FastifyInstance;
     beforeEach(async () => {
       app = Fastify();
-      app.setValidatorCompiler(validatorCompiler);
-      app.setSerializerCompiler(serializerCompiler);
+      app.setValidatorCompiler(createValidatorCompiler());
+      app.setSerializerCompiler(createSerializerCompiler());
 
       app.withTypeProvider<ZodTypeProvider>().route({
         method: 'GET',

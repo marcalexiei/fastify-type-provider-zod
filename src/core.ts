@@ -24,7 +24,7 @@ import { getOpenAPISchemaVersion, openAPISchemaPrune } from './openapi.ts';
 import { zodRegistryToJson, zodSchemaToJson } from './zod-to-json.ts';
 
 //=============================================================================
-// #region Types
+// > Types
 //=============================================================================
 
 /**
@@ -77,39 +77,89 @@ export type FastifyPluginAsyncZod<
 > = FastifyPluginAsync<Options, Server, ZodTypeProvider>;
 
 //=============================================================================
-// #endregion Types
+// < Types
 //=============================================================================
 
-function resolveSchema(
-  maybeSchema: $ZodType | { properties: $ZodType },
-): $ZodType {
+function resolveSchema(maybeSchema: $ZodType): $ZodType {
   if (maybeSchema instanceof $ZodType) {
     return maybeSchema;
   }
-
-  // I'm not sure about the need of this code.
-  // Unit tests are not failing without it so keep it here for reference
-  // if (
-  //   'properties' in maybeSchema &&
-  //   maybeSchema.properties instanceof $ZodType
-  // ) {
-  //   return maybeSchema.properties;
-  // }
 
   throw new InvalidSchemaError(JSON.stringify(maybeSchema));
 }
 
 //=============================================================================
-// #region Transform
+// > Compiler
+//=============================================================================
+
+export function createValidatorCompiler(): FastifySchemaCompiler<$ZodType> {
+  // this function will be called on route config
+  return ({ schema: maybeSchema }) => {
+    // this function will be called to validate route information
+    return (data) => {
+      const schema = resolveSchema(maybeSchema);
+
+      const result = safeParse(schema, data);
+      if (result.error) {
+        return { error: createValidationError(result.error) };
+      }
+
+      return { value: result.data };
+    };
+  };
+}
+
+// biome-ignore-start lint/suspicious/noExplicitAny: Same as json stringify
+// #region ZodSerializerCompilerOptions
+export interface ZodSerializerCompilerOptions {
+  replacer?: (this: any, key: string, value: any) => any;
+}
+// #endregion ZodSerializerCompilerOptions
+// biome-ignore-end lint/suspicious/noExplicitAny: Same as json stringify
+
+export function createSerializerCompiler(
+  options?: ZodSerializerCompilerOptions,
+): FastifySerializerCompiler<$ZodType> {
+  //
+  return ({ schema: maybeSchema, method, url }) => {
+    //
+    return (data) => {
+      const schema = resolveSchema(maybeSchema);
+
+      const result = safeParse(schema, data);
+      if (result.error) {
+        throw new ResponseSerializationError(method, url, {
+          cause: result.error,
+        });
+      }
+
+      return JSON.stringify(result.data, options?.replacer);
+    };
+  };
+}
+
+//=============================================================================
+// < Compiler
+//=============================================================================
+
+//=============================================================================
+// > Transform
 //=============================================================================
 
 interface CreateJsonSchemaTransformOptions {
+  /**
+   * Zod registry that will be be used to generate `components.schemas`.
+   *
+   * @default import('zod').globalRegistry
+   */
   schemaRegistry?: $ZodRegistry<{ id?: string | undefined }>;
 }
 
-export const createJsonSchemaTransform = ({
-  schemaRegistry = globalRegistry,
-}: CreateJsonSchemaTransformOptions): SwaggerTransform => {
+export function createJsonSchemaTransform(
+  options?: CreateJsonSchemaTransformOptions,
+): SwaggerTransform {
+  const { schemaRegistry = globalRegistry } = options ?? {};
+
   // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: no other way
   return (transformData) => {
     if ('swaggerObject' in transformData) {
@@ -148,14 +198,12 @@ export const createJsonSchemaTransform = ({
       [key: string]: unknown;
     }> = { ...rest };
 
-    type ZodSchemaRecord = Record<string, $ZodType>;
-
     const requestSchemas = {
       headers,
       querystring,
       body,
       params,
-    } as ZodSchemaRecord;
+    } as Record<string, $ZodType>;
 
     const openAPISchemaVersion = getOpenAPISchemaVersion(transformData);
 
@@ -185,11 +233,7 @@ export const createJsonSchemaTransform = ({
 
     return { schema: transformed, url };
   };
-};
-
-export const jsonSchemaTransform: SwaggerTransform = createJsonSchemaTransform(
-  {},
-);
+}
 
 interface CreateJsonSchemaTransformObjectOptions {
   /**
@@ -201,7 +245,7 @@ interface CreateJsonSchemaTransformObjectOptions {
 
   /**
    * Use `id` to populate schema `title` field when generating OpenAPI schema.
-   * Might be useful when using OpenAPI tool like scalar who rely on this to show components names
+   * Might be useful when using OpenAPI tool like scalar who rely on this to show components names.
    *
    * @default false
    */
@@ -209,13 +253,13 @@ interface CreateJsonSchemaTransformObjectOptions {
 }
 
 export const createJsonSchemaTransformObject = (
-  options: CreateJsonSchemaTransformObjectOptions,
+  options?: CreateJsonSchemaTransformObjectOptions,
 ): SwaggerTransformObject => {
   const {
     schemaRegistry = globalRegistry,
     //
     setIdAsTitleInSchemas = false,
-  } = options;
+  } = options ?? {};
 
   return (documentObject) => {
     /* v8 ignore next 5 -- @preserve */
@@ -266,69 +310,6 @@ export const createJsonSchemaTransformObject = (
   };
 };
 
-export const jsonSchemaTransformObject: SwaggerTransformObject =
-  createJsonSchemaTransformObject({});
-
 //=============================================================================
-// #endregion Transform
-//=============================================================================
-
-//=============================================================================
-// #region Compiler
-//=============================================================================
-
-export const validatorCompiler: FastifySchemaCompiler<$ZodType> = ({
-  schema: maybeSchema,
-}) => {
-  //
-  return (data) => {
-    const schema = resolveSchema(maybeSchema);
-
-    const result = safeParse(schema, data);
-    if (result.error) {
-      return { error: createValidationError(result.error) };
-    }
-
-    return { value: result.data };
-  };
-};
-
-// biome-ignore-start lint/suspicious/noExplicitAny: Same as json stringify
-// #region ZodSerializerCompilerOptions
-export interface ZodSerializerCompilerOptions {
-  replacer?: (this: any, key: string, value: any) => any;
-}
-// #endregion ZodSerializerCompilerOptions
-// biome-ignore-end lint/suspicious/noExplicitAny: Same as json stringify
-
-type ZodFastifySerializerCompiler = FastifySerializerCompiler<
-  $ZodType | { properties: $ZodType }
->;
-
-export const createSerializerCompiler: (
-  options?: ZodSerializerCompilerOptions,
-) => ZodFastifySerializerCompiler = (options) => {
-  //
-  return ({ schema: maybeSchema, method, url }) => {
-    //
-    return (data) => {
-      const schema = resolveSchema(maybeSchema);
-
-      const result = safeParse(schema, data);
-      if (result.error) {
-        throw new ResponseSerializationError(method, url, {
-          cause: result.error,
-        });
-      }
-
-      return JSON.stringify(result.data, options?.replacer);
-    };
-  };
-};
-
-export const serializerCompiler: ZodFastifySerializerCompiler =
-  createSerializerCompiler();
-
-//=============================================================================
-// #endregion Compiler
+// < Transform
 //=============================================================================

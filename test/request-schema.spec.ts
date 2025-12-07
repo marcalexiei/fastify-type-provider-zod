@@ -4,7 +4,10 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { z } from 'zod/v4';
 
 import type { ZodTypeProvider } from '../src/index.ts';
-import { serializerCompiler, validatorCompiler } from '../src/index.ts';
+import {
+  createSerializerCompiler,
+  createValidatorCompiler,
+} from '../src/index.ts';
 
 describe('response schema', () => {
   let app: FastifyInstance;
@@ -14,8 +17,8 @@ describe('response schema', () => {
     });
 
     app = Fastify();
-    app.setValidatorCompiler(validatorCompiler);
-    app.setSerializerCompiler(serializerCompiler);
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
 
     app
       .withTypeProvider<ZodTypeProvider>()
@@ -130,8 +133,8 @@ describe('should return a FST_ERR_INVALID_SCHEMA error when a non-zod schema is 
   let app: FastifyInstance;
   beforeAll(async () => {
     app = Fastify();
-    app.setValidatorCompiler(validatorCompiler);
-    app.setSerializerCompiler(serializerCompiler);
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
 
     app.withTypeProvider<ZodTypeProvider>().route({
       method: 'GET',

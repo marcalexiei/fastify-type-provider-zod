@@ -3,12 +3,9 @@ export {
   createJsonSchemaTransform,
   createJsonSchemaTransformObject,
   createSerializerCompiler,
+  createValidatorCompiler,
   type FastifyPluginAsyncZod,
   type FastifyPluginCallbackZod,
-  jsonSchemaTransform,
-  jsonSchemaTransformObject,
-  serializerCompiler,
-  validatorCompiler,
   type ZodSerializerCompilerOptions,
   type ZodTypeProvider,
 } from './core.ts';
