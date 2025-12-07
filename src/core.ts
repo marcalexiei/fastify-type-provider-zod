@@ -146,6 +146,7 @@ export function createSerializerCompiler(
 // > Transform
 //=============================================================================
 
+// #region CreateJsonSchemaTransformOptions
 interface CreateJsonSchemaTransformOptions {
   /**
    * Zod registry that will be be used to generate `components.schemas`.
@@ -154,6 +155,7 @@ interface CreateJsonSchemaTransformOptions {
    */
   schemaRegistry?: $ZodRegistry<{ id?: string | undefined }>;
 }
+// #endregion CreateJsonSchemaTransformOptions
 
 export function createJsonSchemaTransform(
   options?: CreateJsonSchemaTransformOptions,
@@ -235,6 +237,7 @@ export function createJsonSchemaTransform(
   };
 }
 
+// #region CreateJsonSchemaTransformObjectOptions
 interface CreateJsonSchemaTransformObjectOptions {
   /**
    * Zod registry that will be be used to generate `components.schemas`.
@@ -244,13 +247,14 @@ interface CreateJsonSchemaTransformObjectOptions {
   schemaRegistry?: $ZodRegistry<{ id?: string | undefined }>;
 
   /**
-   * Use `id` to populate schema `title` field when generating OpenAPI schema.
-   * Might be useful when using OpenAPI tool like scalar who rely on this to show components names.
+   * Use `id` to populate schema `title` field when generating OpenAPI `components.schemas`.
+   * Might be useful when using OpenAPI tools, like scalar, who rely on this to show components names.
    *
    * @default false
    */
   setIdAsTitleInSchemas?: boolean;
 }
+// #endregion CreateJsonSchemaTransformObjectOptions
 
 export const createJsonSchemaTransformObject = (
   options?: CreateJsonSchemaTransformObjectOptions,
