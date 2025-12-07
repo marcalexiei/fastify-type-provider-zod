@@ -1,7 +1,7 @@
 import type { ZodTypeProvider } from '@marcalexiei/fastify-type-provider-zod';
 import {
-  serializerCompiler,
-  validatorCompiler,
+  createSerializerCompiler,
+  createValidatorCompiler,
 } from '@marcalexiei/fastify-type-provider-zod';
 import Fastify from 'fastify';
 import { z } from 'zod';
@@ -9,8 +9,8 @@ import { z } from 'zod';
 const app = Fastify({ logger: true });
 
 // Add schema validator and serializer
-app.setValidatorCompiler(validatorCompiler);
-app.setSerializerCompiler(serializerCompiler);
+app.setValidatorCompiler(createValidatorCompiler());
+app.setSerializerCompiler(createSerializerCompiler());
 
 app.withTypeProvider<ZodTypeProvider>().route({
   method: 'GET',

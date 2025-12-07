@@ -2,10 +2,10 @@ import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUI from '@fastify/swagger-ui';
 import type { ZodTypeProvider } from '@marcalexiei/fastify-type-provider-zod';
 import {
-  jsonSchemaTransform,
-  jsonSchemaTransformObject,
-  serializerCompiler,
-  validatorCompiler,
+  createJsonSchemaTransform,
+  createJsonSchemaTransformObject,
+  createSerializerCompiler,
+  createValidatorCompiler,
 } from '@marcalexiei/fastify-type-provider-zod';
 import Fastify from 'fastify';
 import { z } from 'zod';
@@ -21,8 +21,8 @@ const USER_SCHEMA = z
   });
 
 const app = Fastify({ logger: true });
-app.setValidatorCompiler(validatorCompiler);
-app.setSerializerCompiler(serializerCompiler);
+app.setValidatorCompiler(createValidatorCompiler());
+app.setSerializerCompiler(createSerializerCompiler());
 
 app.register(fastifySwagger, {
   openapi: {
@@ -33,8 +33,8 @@ app.register(fastifySwagger, {
     },
     servers: [],
   },
-  transform: jsonSchemaTransform,
-  transformObject: jsonSchemaTransformObject,
+  transform: createJsonSchemaTransform(),
+  transformObject: createJsonSchemaTransformObject(),
 });
 
 app.register(fastifySwaggerUI, {
