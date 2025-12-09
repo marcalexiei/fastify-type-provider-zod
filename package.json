@@ -24,6 +24,7 @@
   "maintainers": [
     "marcalexiei"
   ],
+  "sideEffect": false,
   "main": "./dist/cjs/index.cjs",
   "module": "./dist/esm/index.js",
   "types": "./dist/cjs/index.d.cts",
