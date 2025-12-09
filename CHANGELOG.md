@@ -1,5 +1,62 @@
 # @marcalexiei/fastify-type-provider-zod
 
+## 3.0.0
+
+### Major Changes
+
+- [#73](https://github.com/marcalexiei/fastify-type-provider-zod/pull/73) [`cb77e48`](https://github.com/marcalexiei/fastify-type-provider-zod/commit/cb77e488b219ecba673093a82611da7fa5ff1012) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat!: requires fastify ^5.5.0
+
+- [#78](https://github.com/marcalexiei/fastify-type-provider-zod/pull/78) [`aea3dd5`](https://github.com/marcalexiei/fastify-type-provider-zod/commit/aea3dd571421ac9aeee87ee98ccf4626545e0397) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat!: remove default compilers and schema transforms in favour of create methods
+
+  `validatorCompiler` and `serializerCompiler` are no longer exported.
+  You can get them by calling directly `createValidatorCompiler` and `createSerializerCompiler`.
+
+  ```diff
+   import {
+  -  serializerCompiler,
+  -  validatorCompiler,
+  +  createSerializerCompiler,
+  +  createValidatorCompiler,
+   } from '@marcalexiei/fastify-type-provider-zod';
+
+  - app.setValidatorCompiler(validatorCompiler);
+  - app.setSerializerCompiler(serializerCompiler);
+  + app.setValidatorCompiler(createValidatorCompiler());
+  + app.setSerializerCompiler(createSerializerCompiler());
+  ```
+
+  The same changes affects `jsonSchemaTransform` and `jsonSchemaTransformObject`
+
+  ```diff
+   import {
+  -  jsonSchemaTransform,
+  -  jsonSchemaTransformObject,
+  +  createJsonSchemaTransform,
+  +  createJsonSchemaTransformObject,
+   } from '../src/index.ts';
+
+  // ...
+
+   await app.register(fastifySwagger, {
+     openapi: createOpenAPIDoc(),
+  -  transform: jsonSchemaTransform,
+  -  transformObject: jsonSchemaTransformObject,
+  +  transform: createJsonSchemaTransform(),
+  +  transformObject: createJsonSchemaTransformObject(),
+   });
+  ```
+
+  If you were relying on `createJsonSchemaTransform` and `createJsonSchemaTransformObject` already,
+  you don't have to change anything.
+
+### Minor Changes
+
+- [#79](https://github.com/marcalexiei/fastify-type-provider-zod/pull/79) [`faaf873`](https://github.com/marcalexiei/fastify-type-provider-zod/commit/faaf87310b146ec7da72c031e80b6d2b844096fb) Thanks [@marcalexiei](https://github.com/marcalexiei)! - docs: add API page
+
+- [#75](https://github.com/marcalexiei/fastify-type-provider-zod/pull/75) [`a225c43`](https://github.com/marcalexiei/fastify-type-provider-zod/commit/a225c43c8ad66c314131c1b03013bba42709ee41) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat(createJsonSchemaTransformObject): add `setIdAsTitleInSchemas`
+
+- [#80](https://github.com/marcalexiei/fastify-type-provider-zod/pull/80) [`760385e`](https://github.com/marcalexiei/fastify-type-provider-zod/commit/760385ecab8cc3717625281029b5b052e9bcbf91) Thanks [@marcalexiei](https://github.com/marcalexiei)! - feat(package): set `sideEffect` to `false`
+
 ## 2.0.2
 
 ### Patch Changes
