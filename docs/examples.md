@@ -24,7 +24,7 @@ Here's how to do it:
 
 ### With zod `globalRegistry`
 
-This plugin automatically generates JSON Schema references via the `jsonSchemaTransformObject` function.
+This plugin automatically generates JSON Schema references via the `createJsonSchemaTransformObject()` function output.
 To enable this, you register your schemas in the global Zod registry and assign each one a unique `id`.
 Once registered, `fastifySwagger` will generate an OpenAPI document that references these schemas appropriately.
 
