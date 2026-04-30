@@ -860,7 +860,94 @@ describe('transformer', () => {
     await app.ready();
 
     expect(() => app.swagger()).toThrow(
-      `Cannot create schema "UserInput": Name already taken by another user defined schema.`,
+      `Cannot create schema "UserInput": It conflicts with the auto-generated input schema for id "User". Rename the schema with id "UserInput" to avoid using the "Input" suffix.`,
+    );
+  });
+
+  it('should generate error if a generated schema name collides with a pre-existing OpenAPI schema', async () => {
+    const app = Fastify();
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
+
+    const schemaRegistry = z.registry<{ id: string }>();
+
+    const USER_SCHEMA = z.object({ id: z.string() });
+    schemaRegistry.add(USER_SCHEMA, { id: 'User' });
+
+    await app.register(fastifySwagger, {
+      openapi: {
+        ...createOpenAPIDoc(),
+        components: {
+          schemas: {
+            User: { type: 'object', properties: { id: { type: 'string' } } },
+          },
+        },
+      },
+      transform: createJsonSchemaTransform({ schemaRegistry }),
+      transformObject: createJsonSchemaTransformObject({ schemaRegistry }),
+    });
+
+    app.withTypeProvider<ZodTypeProvider>().route({
+      method: 'POST',
+      url: '/',
+      schema: {
+        body: USER_SCHEMA,
+        response: { 200: USER_SCHEMA },
+      },
+      handler: (_, res) => {
+        res.send({ id: '1' });
+      },
+    });
+
+    await app.ready();
+
+    expect(() => app.swagger()).toThrow(
+      `Cannot create schema "User": Name conflicts with a pre-existing schema in the OpenAPI document.`,
+    );
+  });
+
+  it('should generate error if an auto-generated input schema name collides with a pre-existing OpenAPI schema', async () => {
+    const app = Fastify();
+    app.setValidatorCompiler(createValidatorCompiler());
+    app.setSerializerCompiler(createSerializerCompiler());
+
+    const schemaRegistry = z.registry<{ id: string }>();
+
+    const USER_SCHEMA = z.object({ id: z.string() });
+    schemaRegistry.add(USER_SCHEMA, { id: 'User' });
+
+    await app.register(fastifySwagger, {
+      openapi: {
+        ...createOpenAPIDoc(),
+        components: {
+          schemas: {
+            UserInput: {
+              type: 'object',
+              properties: { id: { type: 'string' } },
+            },
+          },
+        },
+      },
+      transform: createJsonSchemaTransform({ schemaRegistry }),
+      transformObject: createJsonSchemaTransformObject({ schemaRegistry }),
+    });
+
+    app.withTypeProvider<ZodTypeProvider>().route({
+      method: 'POST',
+      url: '/',
+      schema: {
+        body: USER_SCHEMA,
+        response: { 200: USER_SCHEMA },
+      },
+      handler: (_, res) => {
+        res.send({ id: '1' });
+      },
+    });
+
+    await app.ready();
+
+    expect(() => app.swagger()).toThrow(
+      `Cannot create schema "UserInput": Name conflicts with a pre-existing schema in the OpenAPI document.`,
     );
   });
 

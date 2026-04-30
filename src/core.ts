@@ -20,6 +20,7 @@ import {
   InvalidSchemaError,
   ResponseSerializationError,
 } from './errors.ts';
+import type { OpenAPISchemaVersion } from './openapi.ts';
 import { getOpenAPISchemaVersion, openAPISchemaPrune } from './openapi.ts';
 import { zodRegistryToJson, zodSchemaToJson } from './zod-to-json.ts';
 
@@ -162,6 +163,8 @@ export function createJsonSchemaTransform(
 ): SwaggerTransform {
   const { schemaRegistry = globalRegistry } = options ?? {};
 
+  let cachedOpenAPISchemaVersion: OpenAPISchemaVersion | undefined;
+
   // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: no other way
   return (transformData) => {
     if ('swaggerObject' in transformData) {
@@ -207,7 +210,8 @@ export function createJsonSchemaTransform(
       params,
     } as Record<string, $ZodType>;
 
-    const openAPISchemaVersion = getOpenAPISchemaVersion(transformData);
+    cachedOpenAPISchemaVersion ??= getOpenAPISchemaVersion(transformData);
+    const openAPISchemaVersion = cachedOpenAPISchemaVersion;
 
     for (const [prop, maybeSchema] of Object.entries(requestSchemas)) {
       if (maybeSchema) {
@@ -265,6 +269,7 @@ export const createJsonSchemaTransformObject = (
     setIdAsTitleInSchemas = false,
   } = options ?? {};
 
+  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: not needed
   return (documentObject) => {
     /* v8 ignore next 5 -- @preserve */
     if ('swaggerObject' in documentObject) {
@@ -286,10 +291,27 @@ export const createJsonSchemaTransformObject = (
       setIdAsTitleInSchemas,
     });
 
-    for (const key of Object.keys(outputSchemas)) {
-      if (inputSchemas[key]) {
+    const existingSchemas =
+      documentObject.openapiObject.components?.schemas ?? {};
+
+    for (const key of Object.keys(inputSchemas)) {
+      if (key in existingSchemas) {
         throw new Error(
-          `Cannot create schema "${key}": Name already taken by another user defined schema.`,
+          `Cannot create schema "${key}": Name conflicts with a pre-existing schema in the OpenAPI document.`,
+        );
+      }
+    }
+
+    for (const key of Object.keys(outputSchemas)) {
+      if (key in existingSchemas) {
+        throw new Error(
+          `Cannot create schema "${key}": Name conflicts with a pre-existing schema in the OpenAPI document.`,
+        );
+      }
+      if (inputSchemas[key]) {
+        const conflictingInputId = key.slice(0, -'Input'.length);
+        throw new Error(
+          `Cannot create schema "${key}": It conflicts with the auto-generated input schema for id "${conflictingInputId}". Rename the schema with id "${key}" to avoid using the "Input" suffix.`,
         );
       }
     }
@@ -299,7 +321,7 @@ export const createJsonSchemaTransformObject = (
       components: {
         ...documentObject.openapiObject.components,
         schemas: {
-          ...documentObject.openapiObject.components?.schemas,
+          ...existingSchemas,
           ...inputSchemas,
           ...outputSchemas,
         },
