@@ -860,7 +860,7 @@ describe('transformer', () => {
     await app.ready();
 
     expect(() => app.swagger()).toThrow(
-      `Cannot create schema "UserInput": Name already taken by another user defined schema.`,
+      `Cannot create schema "UserInput": It conflicts with the auto-generated input schema for id "User". Rename the schema with id "UserInput" to avoid using the "Input" suffix.`,
     );
   });
 
