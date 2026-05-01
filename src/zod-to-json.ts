@@ -73,6 +73,46 @@ const getOverride = (
 const getZodJSONSchemaTarget = (version: OpenAPISchemaVersion) =>
   version === '3.0' ? 'openapi-3.0' : 'draft-2020-12';
 
+const PLACEHOLDER_PREFIX = '__SCHEMA__PLACEHOLDER__';
+const DEFS_PATTERN_31 = /^__SCHEMA__PLACEHOLDER__#\/\$defs\/(.+)$/;
+const DEFS_PATTERN_30 = /^__SCHEMA__PLACEHOLDER__#\/definitions\/(.+)$/;
+
+function replaceSchemaRefs(
+  schema: unknown,
+  io: 'input' | 'output',
+  openAPISchemaVersion: OpenAPISchemaVersion,
+): unknown {
+  if (typeof schema !== 'object' || schema === null) {
+    return schema;
+  }
+  if (Array.isArray(schema)) {
+    return schema.map((item) =>
+      replaceSchemaRefs(item, io, openAPISchemaVersion),
+    );
+  }
+
+  const obj = schema as Record<string, unknown>;
+  const result: Record<string, unknown> = {};
+  const pattern =
+    openAPISchemaVersion === '3.1' ? DEFS_PATTERN_31 : DEFS_PATTERN_30;
+
+  for (const [key, value] of Object.entries(obj)) {
+    if (
+      key === '$ref' &&
+      typeof value === 'string' &&
+      value.startsWith(PLACEHOLDER_PREFIX)
+    ) {
+      const match = value.match(pattern);
+      /* v8 ignore next -- @preserve */
+      result[key] = match ? getReferenceUri(match[1], io) : value;
+    } else {
+      result[key] = replaceSchemaRefs(value, io, openAPISchemaVersion);
+    }
+  }
+
+  return result;
+}
+
 export const zodSchemaToJson: (
   zodSchema: $ZodType,
   registry: $ZodRegistry<{ id?: string }>,
@@ -136,20 +176,11 @@ export const zodSchemaToJson: (
     override: (ctx) => getOverride(ctx, io, registry),
   });
 
-  const matchToReplace =
-    openAPISchemaVersion === '3.1'
-      ? /"__SCHEMA__PLACEHOLDER__#\/\$defs\/(.+?)"/g
-      : /"__SCHEMA__PLACEHOLDER__#\/definitions\/(.+?)"/g;
-
-  /**
-   * Replace the previous generated placeholders with the final `$ref` value
-   */
-  const jsonSchemaReplaceRef = JSON.stringify(result).replaceAll(
-    matchToReplace,
-    (_, id) => `"${getReferenceUri(id, io)}"`,
-  );
-
-  const jsonSchemaWithRef = JSON.parse(jsonSchemaReplaceRef);
+  const jsonSchemaWithRef = replaceSchemaRefs(
+    result,
+    io,
+    openAPISchemaVersion,
+  ) as JSONSchema.BaseSchema;
 
   return removeJSONSchemaPropertiesNotUsedByOpenAPI(jsonSchemaWithRef, {
     openAPISchemaVersion,
