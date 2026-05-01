@@ -152,31 +152,6 @@ export function openAPISchemaPrune(
   return newSchema;
 }
 
-// const schema = {
-//   type: 'object',
-//   properties: {
-//     node: {}
-//     // node: { $ref: '#/components/schemas/Node' },
-//   },
-//   components: {
-//     schemas: {
-//       Node: {
-//         type: 'object',
-//         properties: {
-//           value: { type: 'string' },
-//           children: {
-//             type: 'array',
-//             items: { $ref: '#/components/schemas/Node' }, // self-ref only
-//           },
-//         },
-//       },
-//       Unused: { type: 'number' },
-//     },
-//   },
-// };
-
-// console.log(openAPISchemaPrune(schema));
-
 //=============================================================================
 // #endregion Prune
 //=============================================================================
