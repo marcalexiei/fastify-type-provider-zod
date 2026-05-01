@@ -309,8 +309,9 @@ export const createJsonSchemaTransformObject = (
         );
       }
       if (inputSchemas[key]) {
+        const conflictingInputId = key.slice(0, -'Input'.length);
         throw new Error(
-          `Cannot create schema "${key}": Name already taken by another user defined schema.`,
+          `Cannot create schema "${key}": It conflicts with the auto-generated input schema for id "${conflictingInputId}". Rename the schema with id "${key}" to avoid using the "Input" suffix.`,
         );
       }
     }
