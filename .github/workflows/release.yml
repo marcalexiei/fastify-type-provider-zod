@@ -22,48 +22,42 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      id-token: write # added for provenance
+      id-token: write # added for provenance
 
     outputs:
       published: ${{ steps.result.outputs.published }}
 
     steps:
-      - name: Create access token for GitHub App
-        uses: actions/create-github-app-token@v2
-        id: app-token
+      - name: Setup GitHub App Bot User
+        uses: marcalexiei/github-actions/.github/actions/setup-github-app-user-bot@f27a68a73a799c79d7158cf4a98d7e3d5e8e23be # v1.1.0
+        id: app-bot
         with:
           app-id: ${{ vars.RELEASE_HELPER_APP_ID }}
           private-key: ${{ secrets.RELEASE_HELPER_PRIVATE_KEY }}
 
-      - name: Get GitHub App User ID
-        id: app-user-id
-        run: echo "user-id=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-
       - name: Configure git user for GitHub App
         run: |
-          git config --global user.name '${{ steps.app-token.outputs.app-slug }}[bot]'
-          git config --global user.email '${{ steps.app-user-id.outputs.user-id }}+${{ steps.app-token.outputs.app-slug }}[bot]@users.noreply.github.com'
+          git config --global user.name '${{ steps.app-bot.outputs.bot-name }}'
+          git config --global user.email '${{ steps.app-bot.outputs.bot-email }}'
 
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
 
       - name: Install Dependencies
-        uses: ./.github/actions/install-dependencies
+        uses: marcalexiei/github-actions/.github/actions/setup-node-and-pnpm@f27a68a73a799c79d7158cf4a98d7e3d5e8e23be # v1.1.0
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@6a0a831ff30acef54f2c6aa1cbbc1096b066edaf # v1.7.0
         with:
           commit: 'chore: release'
           title: 'chore: release'
           publish: 'pnpm release'
           setupGitUser: false
         env:
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          GITHUB_TOKEN: ${{ steps.app-bot.outputs.token }}
 
       - name: Output changeset result
         id: result
@@ -83,16 +77,16 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Install Dependencies
-        uses: ./.github/actions/install-dependencies
+        uses: marcalexiei/github-actions/.github/actions/setup-node-and-pnpm@f27a68a73a799c79d7158cf4a98d7e3d5e8e23be # v1.1.0
 
       - name: Build with VitePress
         run: pnpm run docs:build
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: docs/.vitepress/dist
 
@@ -104,7 +98,7 @@ jobs:
       - release
       - documentation-build
     if: ${{ needs.release.outputs.published }}
-    
+
     permissions:
       contents: read
       pages: write
@@ -117,7 +111,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
 
   on-ci-fail:
     name: 'Failure'
@@ -125,4 +119,4 @@ jobs:
     timeout-minutes: 1
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     steps:
-      - run: echo 'CI failed. Release won't be executed'
+      - run: echo "CI failed. Release won't be executed"
