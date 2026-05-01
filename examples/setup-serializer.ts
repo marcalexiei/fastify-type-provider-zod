@@ -7,10 +7,7 @@ import Fastify from 'fastify';
 
 const app = Fastify({ logger: true });
 
-const replacer: ZodSerializerCompilerOptions['replacer'] = function (
-  key,
-  value,
-) {
+const replacer: ZodSerializerCompilerOptions['replacer'] = function (key, value) {
   if (this[key] instanceof Date) {
     return { _date: value.toISOString() };
   }

@@ -3,9 +3,9 @@
 layout: home
 
 hero:
-  name: "@marcalexiei"
-  text: "fastify-type-provider-zod"
-  tagline: "Zod Type Provider for Fastify@5"
+  name: '@marcalexiei'
+  text: 'fastify-type-provider-zod'
+  tagline: 'Zod Type Provider for Fastify@5'
   image:
     src: /logo.png
     alt: ''
@@ -28,4 +28,3 @@ features:
     icon: 📄
     details: Generate API docs automatically from the Zod-defined schemas for request and response shapes.
 ---
-

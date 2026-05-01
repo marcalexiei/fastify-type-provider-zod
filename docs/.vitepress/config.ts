@@ -52,8 +52,7 @@ export default defineConfig({
     },
 
     editLink: {
-      pattern:
-        'https://github.com/marcalexiei/fastify-type-provider-zod/edit/main/docs/:path',
+      pattern: 'https://github.com/marcalexiei/fastify-type-provider-zod/edit/main/docs/:path',
     },
   },
   lastUpdated: true,

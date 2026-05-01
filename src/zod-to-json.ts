@@ -86,22 +86,15 @@ function replaceSchemaRefs(
     return schema;
   }
   if (Array.isArray(schema)) {
-    return schema.map((item) =>
-      replaceSchemaRefs(item, io, openAPISchemaVersion),
-    );
+    return schema.map((item) => replaceSchemaRefs(item, io, openAPISchemaVersion));
   }
 
   const obj = schema as Record<string, unknown>;
   const result: Record<string, unknown> = {};
-  const pattern =
-    openAPISchemaVersion === '3.1' ? DEFS_PATTERN_31 : DEFS_PATTERN_30;
+  const pattern = openAPISchemaVersion === '3.1' ? DEFS_PATTERN_31 : DEFS_PATTERN_30;
 
   for (const [key, value] of Object.entries(obj)) {
-    if (
-      key === '$ref' &&
-      typeof value === 'string' &&
-      value.startsWith(PLACEHOLDER_PREFIX)
-    ) {
+    if (key === '$ref' && typeof value === 'string' && value.startsWith(PLACEHOLDER_PREFIX)) {
       const match = value.match(pattern);
       /* v8 ignore next -- @preserve */
       result[key] = match ? getReferenceUri(match[1], io) : value;
@@ -118,12 +111,7 @@ export const zodSchemaToJson: (
   registry: $ZodRegistry<{ id?: string }>,
   io: 'input' | 'output',
   openAPISchemaVersion: OpenAPISchemaVersion,
-) => JSONSchema.BaseSchema = (
-  zodSchema,
-  registry,
-  io,
-  openAPISchemaVersion,
-) => {
+) => JSONSchema.BaseSchema = (zodSchema, registry, io, openAPISchemaVersion) => {
   const schemaRegistryEntry = registry.get(zodSchema);
 
   /**

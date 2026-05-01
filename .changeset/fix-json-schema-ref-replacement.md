@@ -1,5 +1,5 @@
 ---
-"@marcalexiei/fastify-type-provider-zod": patch
+'@marcalexiei/fastify-type-provider-zod': patch
 ---
 
 fix(zodSchemaToJson): replace fragile JSON stringify/regex/parse ref substitution with a safe recursive object walk

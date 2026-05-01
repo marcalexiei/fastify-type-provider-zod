@@ -1,5 +1,5 @@
 ---
-"@marcalexiei/fastify-type-provider-zod": patch
+'@marcalexiei/fastify-type-provider-zod': patch
 ---
 
 fix(createJsonSchemaTransformObject): improve error message when an output schema id conflicts with an auto-generated input schema name

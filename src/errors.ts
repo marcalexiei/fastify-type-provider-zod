@@ -3,43 +3,29 @@ import createError from '@fastify/error';
 import type { FastifyError, FastifySchemaValidationError } from 'fastify';
 import type { $ZodError } from 'zod/v4/core';
 
-export const InvalidSchemaError: FastifyErrorConstructor<
-  { code: string },
+export const InvalidSchemaError: FastifyErrorConstructor<{ code: string }, [string]> = createError<
   [string]
-> = createError<[string]>(
-  'FST_ERR_INVALID_SCHEMA',
-  'Invalid schema passed: %s',
-  500,
-);
+>('FST_ERR_INVALID_SCHEMA', 'Invalid schema passed: %s', 500);
 
-const ZodFastifySchemaValidationErrorSymbol: symbol = Symbol.for(
-  'ZodFastifySchemaValidationError',
-);
+const ZodFastifySchemaValidationErrorSymbol: symbol = Symbol.for('ZodFastifySchemaValidationError');
 
-export interface ZodFastifySchemaValidationError
-  extends FastifySchemaValidationError {
+export interface ZodFastifySchemaValidationError extends FastifySchemaValidationError {
   [ZodFastifySchemaValidationErrorSymbol]: true;
 }
 
-const ResponseSerializationBase: FastifyErrorConstructor<
-  { code: string },
-  [{ cause: $ZodError }]
-> = createError<[{ cause: $ZodError }]>(
-  'FST_ERR_RESPONSE_SERIALIZATION',
-  "Response doesn't match the schema",
-  500,
-);
+const ResponseSerializationBase: FastifyErrorConstructor<{ code: string }, [{ cause: $ZodError }]> =
+  createError<[{ cause: $ZodError }]>(
+    'FST_ERR_RESPONSE_SERIALIZATION',
+    "Response doesn't match the schema",
+    500,
+  );
 
 export class ResponseSerializationError extends ResponseSerializationBase {
   public method: string;
   public url: string;
   public override cause: $ZodError;
 
-  public constructor(
-    method: string,
-    url: string,
-    options: { cause: $ZodError },
-  ) {
+  public constructor(method: string, url: string, options: { cause: $ZodError }) {
     super({ cause: options.cause });
 
     this.method = method;
@@ -48,9 +34,7 @@ export class ResponseSerializationError extends ResponseSerializationBase {
   }
 }
 
-export function isResponseSerializationError(
-  value: unknown,
-): value is ResponseSerializationError {
+export function isResponseSerializationError(value: unknown): value is ResponseSerializationError {
   return 'method' in (value as ResponseSerializationError);
 }
 
@@ -60,15 +44,14 @@ function isZodFastifySchemaValidationError(
   return (
     typeof error === 'object' &&
     error !== null &&
-    (error as ZodFastifySchemaValidationError)[
-      ZodFastifySchemaValidationErrorSymbol
-    ] === true
+    (error as ZodFastifySchemaValidationError)[ZodFastifySchemaValidationErrorSymbol] === true
   );
 }
 
-export function hasZodFastifySchemaValidationErrors(
-  error: unknown,
-): error is Omit<FastifyError, 'validation'> & {
+export function hasZodFastifySchemaValidationErrors(error: unknown): error is Omit<
+  FastifyError,
+  'validation'
+> & {
   validation: Array<ZodFastifySchemaValidationError>;
 } {
   return (
@@ -81,9 +64,7 @@ export function hasZodFastifySchemaValidationErrors(
   );
 }
 
-export function createValidationError(
-  error: $ZodError,
-): Array<ZodFastifySchemaValidationError> {
+export function createValidationError(error: $ZodError): Array<ZodFastifySchemaValidationError> {
   return error.issues.map((issue) => {
     const { code, path, message, ...params } = issue;
 

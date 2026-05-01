@@ -10,12 +10,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: "${{ github.workflow }}-${{ github.head_ref || github.ref }}"
+  group: '${{ github.workflow }}-${{ github.head_ref || github.ref }}'
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  check:
-    name: Code check
+  code-checks:
+    name: Code checks
     timeout-minutes: 5
     runs-on: ubuntu-latest
 
@@ -27,9 +27,12 @@ jobs:
         uses: marcalexiei/github-actions/.github/actions/setup-node-and-pnpm@f27a68a73a799c79d7158cf4a98d7e3d5e8e23be # v1.1.0
 
       - name: Lint
+        run: pnpm run format:check
+
+      - name: Lint
         run: pnpm run lint
 
-  check-documentation:
+  documentation-checks:
     name: Documentation build
     timeout-minutes: 5
     runs-on: ubuntu-latest
@@ -79,8 +82,8 @@ jobs:
     timeout-minutes: 1
     if: always()
     needs:
-      - check
-      - check-documentation
+      - code-checks
+      - documentation-checks
       - test
     steps:
       - name: Exit with error if some jobs are not successful

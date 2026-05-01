@@ -5,10 +5,7 @@ import type { OpenAPIV3, OpenAPIV3_1 } from 'openapi-types';
 import { afterEach, describe, expect, it } from 'vitest';
 import { z } from 'zod/v4';
 
-import type {
-  ZodOpenApiSchemaMetadata,
-  ZodTypeProvider,
-} from '../src/index.ts';
+import type { ZodOpenApiSchemaMetadata, ZodTypeProvider } from '../src/index.ts';
 import {
   createJsonSchemaTransform,
   createJsonSchemaTransformObject,
@@ -724,9 +721,7 @@ describe('transformer', () => {
 
     const schemaRegistry = z.registry<{ id: string }>();
 
-    const USER_NAME_SCHEMA = z
-      .string()
-      .register(schemaRegistry, { id: 'UserName' });
+    const USER_NAME_SCHEMA = z.string().register(schemaRegistry, { id: 'UserName' });
 
     const USER_SCHEMA = z
       .object({
@@ -993,11 +988,7 @@ describe('transformer', () => {
     it('should handle union with `null` value and more than 2 other values', async () => {
       const app = await createNullCaseApp();
 
-      const VALUE_SCHEMA = z.union([
-        z.null(),
-        z.array(z.string()),
-        z.literal('any'),
-      ]);
+      const VALUE_SCHEMA = z.union([z.null(), z.array(z.string()), z.literal('any')]);
 
       app.withTypeProvider<ZodTypeProvider>().route({
         method: 'POST',
@@ -1022,15 +1013,11 @@ describe('transformer', () => {
   describe('description and examples fields with custom schema registry', () => {
     const schemaRegistry = z.registry<ZodOpenApiSchemaMetadata>();
 
-    const UserIdSchema = z
-      .string()
-      .optional()
-      .default('J1')
-      .register(schemaRegistry, {
-        id: 'UserId',
-        description: 'User ID',
-        example: 'U234',
-      });
+    const UserIdSchema = z.string().optional().default('J1').register(schemaRegistry, {
+      id: 'UserId',
+      description: 'User ID',
+      example: 'U234',
+    });
 
     const UserSchema = z
       .strictObject({ name: z.string().optional().default('Unknown') })
