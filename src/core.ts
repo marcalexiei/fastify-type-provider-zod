@@ -1,7 +1,4 @@
-import type {
-  SwaggerTransform,
-  SwaggerTransformObject,
-} from '@fastify/swagger';
+import type { SwaggerTransform, SwaggerTransformObject } from '@fastify/swagger';
 import type {
   FastifyPluginAsync,
   FastifyPluginCallback,
@@ -15,11 +12,7 @@ import type {
 import type { $ZodRegistry, input, JSONSchema, output } from 'zod/v4/core';
 import { $ZodType, globalRegistry, safeParse } from 'zod/v4/core';
 
-import {
-  createValidationError,
-  InvalidSchemaError,
-  ResponseSerializationError,
-} from './errors.ts';
+import { createValidationError, InvalidSchemaError, ResponseSerializationError } from './errors.ts';
 import type { OpenAPISchemaVersion } from './openapi.ts';
 import { getOpenAPISchemaVersion, openAPISchemaPrune } from './openapi.ts';
 import { zodRegistryToJson, zodSchemaToJson } from './zod-to-json.ts';
@@ -168,9 +161,7 @@ export function createJsonSchemaTransform(
   // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: no other way
   return (transformData) => {
     if ('swaggerObject' in transformData) {
-      throw new Error(
-        'createJsonSchemaTransform - OpenAPI 2.0 is not supported',
-      );
+      throw new Error('createJsonSchemaTransform - OpenAPI 2.0 is not supported');
     }
 
     const { schema, url } = transformData;
@@ -273,9 +264,7 @@ export const createJsonSchemaTransformObject = (
   return (documentObject) => {
     /* v8 ignore next 5 -- @preserve */
     if ('swaggerObject' in documentObject) {
-      throw new Error(
-        'createJsonSchemaTransformObject - OpenAPI 2.0 is not supported',
-      );
+      throw new Error('createJsonSchemaTransformObject - OpenAPI 2.0 is not supported');
     }
 
     const openAPISchemaVersion = getOpenAPISchemaVersion(documentObject);
@@ -291,8 +280,7 @@ export const createJsonSchemaTransformObject = (
       setIdAsTitleInSchemas,
     });
 
-    const existingSchemas =
-      documentObject.openapiObject.components?.schemas ?? {};
+    const existingSchemas = documentObject.openapiObject.components?.schemas ?? {};
 
     for (const key of Object.keys(inputSchemas)) {
       if (key in existingSchemas) {

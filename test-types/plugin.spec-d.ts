@@ -6,18 +6,12 @@ import fp from 'fastify-plugin';
 import { assertType, describe, it } from 'vitest';
 import z from 'zod/v4';
 
-import type {
-  FastifyPluginAsyncZod,
-  FastifyPluginCallbackZod,
-} from '../src/index.ts';
+import type { FastifyPluginAsyncZod, FastifyPluginCallbackZod } from '../src/index.ts';
 
 describe('plugin', () => {
   it('ensure the defaults of FastifyPluginAsyncZod are the same as FastifyPluginAsync', () => {
     assertType<FastifyPluginAsync>(async (_fastify, options) => {
-      const pluginAsyncZodDefaults: FastifyPluginAsyncZod = async (
-        fastifyWithZod,
-        optionsZod,
-      ) => {
+      const pluginAsyncZodDefaults: FastifyPluginAsyncZod = async (fastifyWithZod, optionsZod) => {
         assertType<(typeof fastifyWithZod)['server']>(_fastify.server);
         assertType<typeof optionsZod>(options);
       };
@@ -41,10 +35,10 @@ describe('plugin', () => {
 
   it('FastifyPluginAsyncZod should provide correct types when providing generics', () => {
     const app = fastify();
-    const asyncPlugin: FastifyPluginAsyncZod<
-      { optionA: string },
-      Http2Server
-    > = async (_fastify, options) => {
+    const asyncPlugin: FastifyPluginAsyncZod<{ optionA: string }, Http2Server> = async (
+      _fastify,
+      options,
+    ) => {
       assertType<Http2Server>(_fastify.server);
 
       assertType<string>(options.optionA);
@@ -74,10 +68,11 @@ describe('plugin', () => {
   it('FastifyPluginCallbackZod should provide correct types when providing generics', () => {
     const app = fastify();
 
-    const callbackPlugin: FastifyPluginCallbackZod<
-      { optionA: string },
-      Http2Server
-    > = (_fastify, options, done) => {
+    const callbackPlugin: FastifyPluginCallbackZod<{ optionA: string }, Http2Server> = (
+      _fastify,
+      options,
+      done,
+    ) => {
       assertType<Http2Server>(_fastify.server);
 
       assertType<string>(options.optionA);

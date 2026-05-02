@@ -86,10 +86,7 @@ const REF_MATCH_WITH_GROUP = /^#\/(components\/schemas)\/(.+)$/;
 const REF_MATCH_START = /^#\/components\/schemas\//;
 
 // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: can't simplify further
-function resolveTransitiveRefs(
-  schema: Record<string, unknown>,
-  initialRefs: Set<string>,
-) {
+function resolveTransitiveRefs(schema: Record<string, unknown>, initialRefs: Set<string>) {
   const allRefs = new Set(initialRefs);
   let changed = true;
 
@@ -126,15 +123,11 @@ function resolveTransitiveRefs(
   return allRefs;
 }
 
-export function openAPISchemaPrune(
-  schema: JSONSchema.JSONSchema,
-): JSONSchema.JSONSchema {
+export function openAPISchemaPrune(schema: JSONSchema.JSONSchema): JSONSchema.JSONSchema {
   const directRefs = collectRefs(schema); // this skips definitions
   const usedRefs = resolveTransitiveRefs(schema, directRefs);
 
-  const usedDefs = new Set(
-    [...usedRefs].map((r) => r.replace(REF_MATCH_START, '')),
-  );
+  const usedDefs = new Set([...usedRefs].map((r) => r.replace(REF_MATCH_START, '')));
 
   const newSchema: JSONSchema.JSONSchema = JSON.parse(JSON.stringify(schema));
 

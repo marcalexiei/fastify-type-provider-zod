@@ -55,10 +55,10 @@ z
   .string()
   .optional()
   .default('U1')
-  .register(customRegistry{ 
-    id: 'UserId', 
+  .register(customRegistry{
+    id: 'UserId',
     description: 'User identifier',
-    example: 'U234', 
+    example: 'U234',
   })
 ```
 

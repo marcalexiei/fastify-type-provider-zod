@@ -2,29 +2,28 @@
   "name": "@marcalexiei/fastify-type-provider-zod",
   "version": "3.0.0",
   "description": "Zod Type Provider for Fastify@5",
-  "type": "module",
-  "publishConfig": {
-    "access": "public"
-  },
   "keywords": [
     "fastify",
-    "zod",
+    "provider",
     "type",
-    "provider"
+    "zod"
   ],
-  "repository": {
-    "url": "https://github.com/marcalexiei/fastify-type-provider-zod"
-  },
-  "license": "MIT",
+  "homepage": "https://marcalexiei.github.io/fastify-type-provider-zod/",
   "bugs": {
     "url": "https://github.com/marcalexiei/fastify-type-provider-zod/issues"
   },
-  "homepage": "https://marcalexiei.github.io/fastify-type-provider-zod/",
+  "license": "MIT",
   "author": "turkerdev",
   "maintainers": [
     "marcalexiei"
   ],
-  "sideEffect": false,
+  "repository": {
+    "url": "https://github.com/marcalexiei/fastify-type-provider-zod"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
   "main": "./dist/cjs/index.cjs",
   "module": "./dist/esm/index.js",
   "types": "./dist/cjs/index.d.cts",
@@ -38,32 +37,27 @@
       "default": "./dist/esm/index.js"
     }
   },
-  "files": [
-    "dist"
-  ],
-  "packageManager": "pnpm@10.24.0+sha512.01ff8ae71b4419903b65c60fb2dc9d34cf8bb6e06d03bde112ef38f7a34d6904c424ba66bea5cdcf12890230bf39f9580473140ed9c946fef328b6e5238a345a",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "vite build",
     "test": "vitest --coverage",
     "test:runtime": "vitest --project runtime --coverage",
     "test:types": "vitest --project 'typecheck-*'",
-    "lint": "biome check . && tsc --noEmit",
-    "lint:fix": "biome check --write .",
+    "format": "oxfmt .",
+    "format:check": "oxfmt . --check",
+    "lint": "biome lint . && tsc --noEmit",
+    "lint:fix": "biome lint --write .",
     "release": "pnpm run build && changeset publish",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "docs:lint": "tsc -p examples/tsconfig.json",
-    "check-all": "pnpm run build && pnpm run test && pnpm run lint && pnpm run docs:lint"
+    "check-all": "pnpm run build && pnpm run test && pnpm run format:check && pnpm run lint && pnpm run docs:lint"
   },
   "dependencies": {
     "@fastify/error": "^4.2.0"
-  },
-  "peerDependencies": {
-    "@fastify/swagger": "^9.5.1",
-    "fastify": "^5.5.0",
-    "openapi-types": "^12.1.3",
-    "zod": "^4.1.4"
   },
   "devDependencies": {
     "@biomejs/biome": "2.3.8",
@@ -72,17 +66,27 @@
     "@fastify/swagger": "9.6.1",
     "@fastify/swagger-ui": "5.2.3",
     "@marcalexiei/biome-config": "3.0.0",
+    "@marcalexiei/oxfmt-config": "1.1.0",
     "@seriousme/openapi-schema-validator": "2.7.0",
     "@types/node": "24.10.1",
     "@vitest/coverage-v8": "4.0.15",
     "fastify": "5.6.2",
     "fastify-plugin": "5.1.0",
     "openapi-types": "12.1.3",
+    "oxfmt": "0.47.0",
     "typescript": "5.9.3",
     "unplugin-isolated-decl": "0.15.6",
     "vite": "7.2.6",
     "vitepress": "2.0.0-alpha.15",
     "vitest": "4.0.15",
-    "zod": "4.4.1"
-  }
+    "zod": "4.4.2"
+  },
+  "peerDependencies": {
+    "@fastify/swagger": "^9.5.1",
+    "fastify": "^5.5.0",
+    "openapi-types": "^12.1.3",
+    "zod": "^4.1.4"
+  },
+  "packageManager": "pnpm@10.24.0+sha512.01ff8ae71b4419903b65c60fb2dc9d34cf8bb6e06d03bde112ef38f7a34d6904c424ba66bea5cdcf12890230bf39f9580473140ed9c946fef328b6e5238a345a",
+  "sideEffect": false
 }

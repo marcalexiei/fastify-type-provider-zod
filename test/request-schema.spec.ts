@@ -4,10 +4,7 @@ import { beforeAll, describe, expect, it } from 'vitest';
 import { z } from 'zod/v4';
 
 import type { ZodTypeProvider } from '../src/index.ts';
-import {
-  createSerializerCompiler,
-  createValidatorCompiler,
-} from '../src/index.ts';
+import { createSerializerCompiler, createValidatorCompiler } from '../src/index.ts';
 
 describe('response schema', () => {
   let app: FastifyInstance;

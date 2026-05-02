@@ -13,14 +13,10 @@ describe('ZodFastifySchemaValidationError', () => {
     it('should narrow type to ZodFastifySchemaValidationError', () => {
       const error: unknown = {};
       if (hasZodFastifySchemaValidationErrors(error)) {
-        expectTypeOf<ZodFastifySchemaValidationError>().toEqualTypeOf(
-          error.validation[0],
-        );
+        expectTypeOf<ZodFastifySchemaValidationError>().toEqualTypeOf(error.validation[0]);
 
         for (const validationError of error.validation) {
-          expectTypeOf<ZodFastifySchemaValidationError>().toEqualTypeOf(
-            validationError,
-          );
+          expectTypeOf<ZodFastifySchemaValidationError>().toEqualTypeOf(validationError);
         }
       }
     });

@@ -1,7 +1,7 @@
-import 'vitest';
-
 import { Validator } from '@seriousme/openapi-schema-validator';
 import { expect } from 'vitest';
+
+import 'vitest';
 
 interface CustomMatchers<R = unknown> {
   toBeValidOpenAPISchema: () => Promise<R>;

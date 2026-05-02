@@ -1,5 +1,5 @@
 ---
-"@marcalexiei/fastify-type-provider-zod": patch
+'@marcalexiei/fastify-type-provider-zod': patch
 ---
 
 fix(createJsonSchemaTransformObject): throw when a generated schema name conflicts with a pre-existing schema in `openapiObject.components.schemas`

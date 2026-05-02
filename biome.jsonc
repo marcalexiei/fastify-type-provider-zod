@@ -1,10 +1,13 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "extends": ["@marcalexiei/biome-config/base"],
+  "formatter": {
+    "enabled": false,
+  },
   "linter": {
     "domains": {
-      "project": "all"
-    }
+      "project": "all",
+    },
   },
   "overrides": [
     {
@@ -12,10 +15,10 @@
       "linter": {
         "rules": {
           "performance": {
-            "noDelete": "off"
-          }
-        }
-      }
+            "noDelete": "off",
+          },
+        },
+      },
     },
     {
       "includes": ["src/**"],
@@ -32,14 +35,14 @@
                 "patterns": [
                   {
                     "group": ["zod", "zod/*", "!zod/v4/core"],
-                    "message": "This plugins supports both `zod` and `zod-mini`, so please import only from `zod/v4/core`"
-                  }
-                ]
-              }
-            }
-          }
-        }
-      }
+                    "message": "This plugins supports both `zod` and `zod-mini`, so please import only from `zod/v4/core`",
+                  },
+                ],
+              },
+            },
+          },
+        },
+      },
     },
     // ensure that in test files everything is imported from src/index
     {
@@ -53,28 +56,28 @@
                 "patterns": [
                   {
                     "group": ["../src/*", "!../src/index.ts"],
-                    "message": "import only from `../src/index`"
-                  }
-                ]
-              }
+                    "message": "import only from `../src/index`",
+                  },
+                ],
+              },
             },
-            "useNamingConvention": "off"
-          }
-        }
-      }
+            "useNamingConvention": "off",
+          },
+        },
+      },
     },
     {
       "includes": ["./test-types/**/*.ts"],
       "linter": {
         "rules": {
           "correctness": {
-            "noUnusedFunctionParameters": "off"
+            "noUnusedFunctionParameters": "off",
           },
           "suspicious": {
-            "useAwait": "off"
-          }
-        }
-      }
-    }
-  ]
+            "useAwait": "off",
+          },
+        },
+      },
+    },
+  ],
 }
