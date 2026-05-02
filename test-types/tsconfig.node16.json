@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig.test.json",
   "compilerOptions": {
-    "moduleResolution": "node16",
-    "module": "node16"
+    "module": "node16",
+    "moduleResolution": "node16"
   }
 }

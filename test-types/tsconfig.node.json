@@ -1,6 +1,7 @@
 {
   "extends": "../tsconfig.test.json",
   "compilerOptions": {
-    "moduleResolution": "node"
+    "module": "commonjs",
+    "moduleResolution": "node10"
   }
 }

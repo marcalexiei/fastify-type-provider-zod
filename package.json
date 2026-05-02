@@ -46,7 +46,7 @@
     "build": "vite build",
     "test": "vitest --coverage",
     "test:runtime": "vitest --project runtime --coverage",
-    "test:types": "vitest --project typecheck",
+    "test:types": "vitest --project 'typecheck-*'",
     "lint": "biome check . && tsc --noEmit",
     "lint:fix": "biome check --write .",
     "release": "pnpm run build && changeset publish",

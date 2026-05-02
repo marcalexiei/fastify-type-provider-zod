@@ -21,7 +21,7 @@
     "noImplicitOverride": true,
 
     // Modules
-    "moduleResolution": "node",
+    "module": "node16",
 
     // Emit
     "declaration": true,

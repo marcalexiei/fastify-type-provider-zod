@@ -3,7 +3,6 @@
   "include": ["./*.ts"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "module": "ESNext",
     "paths": {
       "@marcalexiei/fastify-type-provider-zod": ["../src"]
     }
