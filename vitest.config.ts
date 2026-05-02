@@ -34,7 +34,7 @@ export default defineConfig({
       ).map<TestProjectConfiguration>(([it, color]) => ({
         test: {
           name: {
-            label: `typecheck ${it.split('.')[1]}`,
+            label: `typecheck-${it.split('.', 2)[1]}`,
             color,
           },
           dir: './test-types',
