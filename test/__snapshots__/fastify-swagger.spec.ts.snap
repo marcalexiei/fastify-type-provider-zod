@@ -181,6 +181,7 @@ exports[`transformer > description and examples fields with custom schema regist
               },
             },
           },
+          "required": true,
         },
         "responses": {
           "200": {
@@ -287,6 +288,7 @@ exports[`transformer > description and examples fields with custom schema regist
               },
             },
           },
+          "required": true,
         },
         "responses": {
           "200": {
@@ -1142,6 +1144,7 @@ exports[`transformer > should generate referenced input and output schemas corre
               },
             },
           },
+          "required": true,
         },
         "responses": {
           "200": {
@@ -1335,6 +1338,7 @@ exports[`transformer > should not remove schema only referenced from components.
               },
             },
           },
+          "required": true,
         },
         "responses": {
           "200": {
@@ -1416,6 +1420,7 @@ exports[`transformer > should not remove securitySchemes from the final openAPI 
               },
             },
           },
+          "required": true,
         },
         "responses": {
           "200": {
