@@ -1,5 +1,21 @@
 # @marcalexiei/fastify-type-provider-zod
 
+## 3.0.1
+
+### Patch Changes
+
+- [#95](https://github.com/marcalexiei/fastify-type-provider-zod/pull/95) [`be5c766`](https://github.com/marcalexiei/fastify-type-provider-zod/commit/be5c7667f07d5246aeb0bf80df06101b9f15c826) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix(createJsonSchemaTransformObject): improve error message when an output schema id conflicts with an auto-generated input schema name
+
+  The message now names the conflicting id and explains the `Input` suffix convention, instead of the generic "Name already taken by another user defined schema".
+
+- [#93](https://github.com/marcalexiei/fastify-type-provider-zod/pull/93) [`5e808fa`](https://github.com/marcalexiei/fastify-type-provider-zod/commit/5e808fa1f280c77f5863fd04b321d977c8b4a79b) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix(createJsonSchemaTransformObject): throw when a generated schema name conflicts with a pre-existing schema in `openapiObject.components.schemas`
+
+  Previously, generated schemas silently overwrote user-provided ones, producing a corrupt OpenAPI document.
+
+- [#92](https://github.com/marcalexiei/fastify-type-provider-zod/pull/92) [`ef8fcda`](https://github.com/marcalexiei/fastify-type-provider-zod/commit/ef8fcdac43ce28bc01b9a71a189db09f7bd38e82) Thanks [@marcalexiei](https://github.com/marcalexiei)! - fix(zodSchemaToJson): replace fragile JSON stringify/regex/parse ref substitution with a safe recursive object walk
+
+  The previous approach could silently corrupt output if a string value inside a schema happened to contain the internal placeholder marker. The new implementation only substitutes actual `$ref` string values.
+
 ## 3.0.0
 
 ### Major Changes
