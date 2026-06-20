@@ -29,7 +29,7 @@ jobs:
 
     steps:
       - name: Setup GitHub App Bot User
-        uses: marcalexiei/github-actions/.github/actions/setup-github-app-user-bot@f27a68a73a799c79d7158cf4a98d7e3d5e8e23be # v1.1.0
+        uses: marcalexiei/github-actions/setup-github-app-user-bot@35654007fc916287603cd114516a3d1295f62689 # v2.0.0
         id: app-bot
         with:
           app-id: ${{ vars.RELEASE_HELPER_APP_ID }}
@@ -41,16 +41,16 @@ jobs:
           git config --global user.email '${{ steps.app-bot.outputs.bot-email }}'
 
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: false
 
       - name: Install Dependencies
-        uses: marcalexiei/github-actions/.github/actions/setup-node-and-pnpm@f27a68a73a799c79d7158cf4a98d7e3d5e8e23be # v1.1.0
+        uses: marcalexiei/github-actions/setup-node-and-pnpm@35654007fc916287603cd114516a3d1295f62689 # v2.0.0
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
-        uses: changesets/action@6a0a831ff30acef54f2c6aa1cbbc1096b066edaf # v1.7.0
+        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
         with:
           commit: 'chore: release'
           title: 'chore: release'
@@ -77,10 +77,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Install Dependencies
-        uses: marcalexiei/github-actions/.github/actions/setup-node-and-pnpm@f27a68a73a799c79d7158cf4a98d7e3d5e8e23be # v1.1.0
+        uses: marcalexiei/github-actions/setup-node-and-pnpm@35654007fc916287603cd114516a3d1295f62689 # v2.0.0
 
       - name: Build with VitePress
         run: pnpm run docs:build
