@@ -46,7 +46,7 @@ jobs:
           persist-credentials: false
 
       - name: Install Dependencies
-        uses: marcalexiei/github-actions/setup-node-and-pnpm@35654007fc916287603cd114516a3d1295f62689 # v2.0.0
+        uses: marcalexiei/github-actions/setup-node-and-pnpm@ce1673b7269a1dd87e174de9c40a71eb912edd9f # v2.4.1
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
@@ -80,7 +80,7 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Install Dependencies
-        uses: marcalexiei/github-actions/setup-node-and-pnpm@35654007fc916287603cd114516a3d1295f62689 # v2.0.0
+        uses: marcalexiei/github-actions/setup-node-and-pnpm@ce1673b7269a1dd87e174de9c40a71eb912edd9f # v2.4.1
 
       - name: Build with VitePress
         run: pnpm run docs:build

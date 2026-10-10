@@ -24,7 +24,7 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Install Dependencies
-        uses: marcalexiei/github-actions/setup-node-and-pnpm@35654007fc916287603cd114516a3d1295f62689 # v2.0.0
+        uses: marcalexiei/github-actions/setup-node-and-pnpm@ce1673b7269a1dd87e174de9c40a71eb912edd9f # v2.4.1
 
       - name: Lint
         run: pnpm run format:check
@@ -42,7 +42,9 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Install Dependencies
-        uses: marcalexiei/github-actions/setup-node-and-pnpm@35654007fc916287603cd114516a3d1295f62689 # v2.0.0
+        uses: marcalexiei/github-actions/setup-node-and-pnpm@ce1673b7269a1dd87e174de9c40a71eb912edd9f # v2.4.1
+        with:
+          save-cache: false # shares its cache key with Code checks
 
       - name: Lint
         run: |
@@ -66,7 +68,7 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Install Dependencies
-        uses: marcalexiei/github-actions/setup-node-and-pnpm@35654007fc916287603cd114516a3d1295f62689 # v2.0.0
+        uses: marcalexiei/github-actions/setup-node-and-pnpm@ce1673b7269a1dd87e174de9c40a71eb912edd9f # v2.4.1
         with:
           node-version: ${{ matrix.node-version }}
 
