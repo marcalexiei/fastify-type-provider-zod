@@ -1,12 +1,15 @@
 name: Release
 
 on:
-  workflow_run:
-    workflows: [CI]
-    types: [completed]
-    branches: [main]
+  push:
+    branches:
+      - main
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+  # queue every push: without it, a newer run replaces the waiting one and that release is skipped
+  queue: max
 
 permissions: {}
 
@@ -16,7 +19,6 @@ env:
 jobs:
   release:
     name: Release
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
     permissions:
@@ -112,11 +114,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
-
-  on-ci-fail:
-    name: 'Failure'
-    runs-on: ubuntu-latest
-    timeout-minutes: 1
-    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
-    steps:
-      - run: echo "CI failed. Release won't be executed"
