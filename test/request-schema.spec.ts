@@ -56,7 +56,7 @@ describe('response schema', () => {
 
     await app.ready();
 
-    return async () => {
+    return async (): Promise<void> => {
       await app.close();
     };
   });
@@ -67,7 +67,7 @@ describe('response schema', () => {
     });
 
     expect(response.statusCode).toBe(200);
-    expect(response.json()).toEqual({
+    expect(response.json()).toStrictEqual({
       name: 'test',
     });
   });
@@ -76,7 +76,7 @@ describe('response schema', () => {
     const response = await app.inject().get('/no-schema');
 
     expect(response.statusCode).toBe(200);
-    expect(response.json()).toEqual({
+    expect(response.json()).toStrictEqual({
       status: 'ok',
     });
   });
@@ -146,7 +146,7 @@ describe('should return a FST_ERR_INVALID_SCHEMA error when a non-zod schema is 
 
     await app.ready();
 
-    return async () => {
+    return async (): Promise<void> => {
       await app.close();
     };
   });

@@ -13,6 +13,7 @@ import {
   createValidatorCompiler,
 } from '../src/index.ts';
 
+// oxlint-disable-next-line import/no-unassigned-import -- registers the custom matchers
 import './_custom-openapi-schema-matchers.ts';
 
 function createOpenAPIDoc(
@@ -28,6 +29,20 @@ function createOpenAPIDoc(
     servers: [],
     components: {},
   };
+}
+
+async function createNullCaseApp(): Promise<FastifyInstance> {
+  const app = Fastify();
+  app.setValidatorCompiler(createValidatorCompiler());
+  app.setSerializerCompiler(createSerializerCompiler());
+
+  await app.register(fastifySwagger, {
+    openapi: createOpenAPIDoc(),
+    transform: createJsonSchemaTransform(),
+    transformObject: createJsonSchemaTransformObject(),
+  });
+
+  return app;
 }
 
 describe('transformer', () => {
@@ -222,7 +237,7 @@ describe('transformer', () => {
 
     await app.ready();
 
-    expect(() => app.swagger()).toThrowError('OpenAPI 2.0 is not supported');
+    expect(() => app.swagger()).toThrow('OpenAPI 2.0 is not supported');
   });
 
   it('should not generate ref when not using a zod registry', async () => {
@@ -947,20 +962,6 @@ describe('transformer', () => {
   });
 
   describe('null type', () => {
-    const createNullCaseApp = async (): Promise<FastifyInstance> => {
-      const app = Fastify();
-      app.setValidatorCompiler(createValidatorCompiler());
-      app.setSerializerCompiler(createSerializerCompiler());
-
-      await app.register(fastifySwagger, {
-        openapi: createOpenAPIDoc(),
-        transform: createJsonSchemaTransform(),
-        transformObject: createJsonSchemaTransformObject(),
-      });
-
-      return app;
-    };
-
     it('should handle union with an array and `null`', async () => {
       const app = await createNullCaseApp();
 

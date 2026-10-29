@@ -1,5 +1,4 @@
 import UnpluginIsolatedDecl from 'unplugin-isolated-decl/vite';
-import type { Plugin } from 'vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
@@ -9,7 +8,7 @@ export default defineConfig({
     emptyOutDir: true,
     minify: false,
     sourcemap: true,
-    rollupOptions: {
+    rolldownOptions: {
       external: ['fastify', /zod\/v4*?/, '@fastify/swagger', '@fastify/error'],
       output: [
         {
@@ -25,5 +24,5 @@ export default defineConfig({
       ],
     },
   },
-  plugins: [UnpluginIsolatedDecl() as Plugin],
+  plugins: [UnpluginIsolatedDecl()],
 });

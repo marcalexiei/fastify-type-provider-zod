@@ -21,11 +21,11 @@ const ResponseSerializationBase: FastifyErrorConstructor<{ code: string }, [{ ca
   );
 
 export class ResponseSerializationError extends ResponseSerializationBase {
-  public method: string;
-  public url: string;
-  public override cause: $ZodError;
+  method: string;
+  url: string;
+  override cause: $ZodError;
 
-  public constructor(method: string, url: string, options: { cause: $ZodError }) {
+  constructor(method: string, url: string, options: { cause: $ZodError }) {
     super({ cause: options.cause });
 
     this.method = method;
@@ -44,7 +44,7 @@ function isZodFastifySchemaValidationError(
   return (
     typeof error === 'object' &&
     error !== null &&
-    (error as ZodFastifySchemaValidationError)[ZodFastifySchemaValidationErrorSymbol] === true
+    (error as Partial<Record<symbol, unknown>>)[ZodFastifySchemaValidationErrorSymbol] === true
   );
 }
 

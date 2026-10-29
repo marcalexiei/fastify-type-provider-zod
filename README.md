@@ -1,14 +1,14 @@
 # `@marcalexiei/fastify-type-provider-zod`
 
 [![CI][CIBadge]][CIURL]
-[![Checked with Biome][CheckerBadge]][CheckerURL]
+[![Lint: oxlint][CheckerBadge]][CheckerURL]
 [![npm version][npmVersionBadge]][npmVersionURL]
 [![issues][issuesBadge]][issuesURL]
 
 [CIBadge]: https://img.shields.io/github/actions/workflow/status/marcalexiei/fastify-type-provider-zod/ci.yml?style=for-the-badge&logo=github&event=push&label=CI
 [CIURL]: https://github.com/marcalexiei/fastify-type-provider-zod/actions/workflows/ci.yml
-[CheckerBadge]: https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=for-the-badge&logo=biome
-[CheckerURL]: https://biomejs.dev
+[CheckerBadge]: https://img.shields.io/badge/lint-oxlint-2C2C2C?style=for-the-badge
+[CheckerURL]: https://oxc.rs/docs/guide/usage/linter.html
 [npmVersionBadge]: https://img.shields.io/npm/v/@marcalexiei/fastify-type-provider-zod.svg?style=for-the-badge&logo=npm
 [npmVersionURL]: https://www.npmjs.com/package/@marcalexiei/fastify-type-provider-zod
 [issuesBadge]: https://img.shields.io/github/issues/marcalexiei/fastify-type-provider-zod.svg?style=for-the-badge

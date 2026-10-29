@@ -46,5 +46,6 @@ updates:
         applies-to: 'version-updates'
         dependency-type: 'development'
         patterns:
-          - '@biomejs/biome'
-          - '@marcalexiei/biome-config'
+          - 'oxlint'
+          - 'oxlint-tsgolint'
+          - '@marcalexiei/oxlint-config'
