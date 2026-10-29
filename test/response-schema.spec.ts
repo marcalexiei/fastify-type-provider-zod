@@ -41,7 +41,7 @@ describe('response schema', () => {
             },
           },
           handler: (_req, res) => {
-            // @ts-expect-error
+            // @ts-expect-error -- the 204 schema allows no body
             res.status(204).send({ id: 1 });
           },
         });
@@ -63,7 +63,7 @@ describe('response schema', () => {
       });
       await app.ready();
 
-      return async () => {
+      return async (): Promise<void> => {
         await app.close();
       };
     });
@@ -72,7 +72,7 @@ describe('response schema', () => {
       const response = await app.inject().get('/');
 
       expect(response.statusCode).toBe(204);
-      expect(response.body).toEqual('');
+      expect(response.body).toBe('');
     });
 
     it('throws on non-empty', async () => {
@@ -139,7 +139,7 @@ describe('response schema', () => {
 
       await app.ready();
 
-      return async () => {
+      return async (): Promise<void> => {
         await app.close();
       };
     });
@@ -148,7 +148,7 @@ describe('response schema', () => {
       const response = await app.inject().get('/');
 
       expect(response.statusCode).toBe(200);
-      expect(response.body).toEqual('test');
+      expect(response.body).toBe('test');
     });
 
     it('returns 500 on incorrect response', async () => {
@@ -219,7 +219,7 @@ describe('response schema', () => {
       const response = await app.inject().get('/');
 
       expect(response.statusCode).toBe(200);
-      expect(response.json()).toEqual({
+      expect(response.json()).toStrictEqual({
         name: 'test',
       });
     });
@@ -236,9 +236,10 @@ describe('response schema', () => {
       app.setValidatorCompiler(createValidatorCompiler());
 
       const serializerCompilerCustom = createSerializerCompiler({
-        replacer(key: string, value: unknown): unknown {
-          if (this[key] instanceof Date) {
-            return { _date: this[key].toISOString() };
+        replacer(this: Record<string, unknown>, key: string, value: unknown): unknown {
+          const original = this[key];
+          if (original instanceof Date) {
+            return { _date: original.toISOString() };
           }
           return value;
         },
@@ -263,7 +264,7 @@ describe('response schema', () => {
 
       await app.ready();
 
-      return async () => {
+      return async (): Promise<void> => {
         await app.close();
       };
     });
@@ -272,7 +273,7 @@ describe('response schema', () => {
       const response = await app.inject().get('/');
 
       expect(response.statusCode).toBe(200);
-      expect(response.json()).toEqual({
+      expect(response.json()).toStrictEqual({
         createdAt: { _date: '2021-01-01T00:00:00.000Z' },
       });
     });
@@ -300,7 +301,7 @@ describe('response schema', () => {
 
       await app.ready();
 
-      return async () => {
+      return async (): Promise<void> => {
         await app.close();
       };
     });

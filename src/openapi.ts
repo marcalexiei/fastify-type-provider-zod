@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/nursery/noContinue: hate nested cycles with lot of conditions */
+/* oxlint-disable no-continue -- hate nested cycles with lot of conditions */
 import type { OpenAPIV3, OpenAPIV3_1 } from 'openapi-types';
 import type { JSONSchema } from 'zod/v4/core';
 
@@ -41,67 +41,68 @@ export const removeJSONSchemaPropertiesNotUsedByOpenAPI = (
 // #region Prune
 //=============================================================================
 
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: can't simplify further
-function collectRefs(
-  schema: Record<string, unknown>,
-  refs = new Set<string>(),
-  seen = new WeakSet<Record<string, unknown>>(),
-  skipDefs = true,
-): Set<string> {
-  if (!schema || typeof schema !== 'object') {
-    return refs;
-  }
-  if (seen.has(schema)) {
-    /* v8 ignore next -- @preserve */
-    return refs;
-  }
-  seen.add(schema);
+function collectRefs(schema: unknown, skipDefs = true): Set<string> {
+  const refs = new Set<string>();
+  const seen = new WeakSet();
 
-  if (schema.$ref && typeof schema.$ref === 'string') {
-    refs.add(schema.$ref);
-  }
-
-  for (const key of Object.keys(schema)) {
-    if (skipDefs && key === 'components') {
-      // don't walk into definitions/components directly
-      continue;
+  const walk = (node: unknown): void => {
+    if (!node || typeof node !== 'object') {
+      return;
     }
-    const value = schema[key];
-    if (Array.isArray(value)) {
-      for (const v of value) {
-        collectRefs(v, refs, seen, skipDefs);
+    if (seen.has(node)) {
+      /* v8 ignore next -- @preserve */
+      return;
+    }
+    seen.add(node);
+
+    if (Array.isArray(node)) {
+      for (const item of node) {
+        walk(item);
       }
-      continue;
+      return;
     }
 
-    if (typeof value === 'object') {
-      collectRefs(value as Record<string, unknown>, refs, seen, skipDefs);
+    const record = node as Record<string, unknown>;
+
+    if (record.$ref && typeof record.$ref === 'string') {
+      refs.add(record.$ref);
     }
-  }
+
+    for (const [key, value] of Object.entries(record)) {
+      if (skipDefs && key === 'components') {
+        // don't walk into definitions/components directly
+        continue;
+      }
+      walk(value);
+    }
+  };
+
+  walk(schema);
 
   return refs;
 }
 
-const REF_MATCH_WITH_GROUP = /^#\/(components\/schemas)\/(.+)$/;
+type ComponentsLike = { schemas?: Record<string, unknown> } | undefined;
+
+const REF_MATCH_WITH_GROUP = /^#\/components\/schemas\/(?<name>.+)$/;
 const REF_MATCH_START = /^#\/components\/schemas\//;
 
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: can't simplify further
-function resolveTransitiveRefs(schema: Record<string, unknown>, initialRefs: Set<string>) {
+function resolveTransitiveRefs(
+  schema: Record<string, unknown>,
+  initialRefs: Set<string>,
+): Set<string> {
   const allRefs = new Set(initialRefs);
+  const container = (schema.components as ComponentsLike)?.schemas;
   let changed = true;
 
   while (changed) {
     changed = false;
-    for (const ref of [...allRefs]) {
-      const match = ref.match(REF_MATCH_WITH_GROUP);
+    for (const ref of allRefs) {
+      const name = REF_MATCH_WITH_GROUP.exec(ref)?.groups?.name;
       /* v8 ignore next -- @preserve */
-      if (!match) {
+      if (!name) {
         continue;
       }
-
-      const [, , name] = match;
-      // @ts-expect-error
-      const container = schema.components?.schemas;
 
       const def = container?.[name];
       if (!def) {
@@ -109,7 +110,7 @@ function resolveTransitiveRefs(schema: Record<string, unknown>, initialRefs: Set
         continue;
       }
 
-      const newRefs = collectRefs(def, new Set(), new WeakSet(), false);
+      const newRefs = collectRefs(def, false);
       // allow walking into defs once referenced
       for (const nr of newRefs) {
         if (!allRefs.has(nr)) {
@@ -127,19 +128,17 @@ export function openAPISchemaPrune(schema: JSONSchema.JSONSchema): JSONSchema.JS
   const directRefs = collectRefs(schema); // this skips definitions
   const usedRefs = resolveTransitiveRefs(schema, directRefs);
 
-  const usedDefs = new Set([...usedRefs].map((r) => r.replace(REF_MATCH_START, '')));
+  const usedDefs = new Set([...usedRefs].map((ref) => ref.replace(REF_MATCH_START, '')));
 
-  const newSchema: JSONSchema.JSONSchema = JSON.parse(JSON.stringify(schema));
+  // oxlint-disable-next-line unicorn/prefer-structured-clone -- the copy must hold only what JSON keeps
+  const newSchema = JSON.parse(JSON.stringify(schema)) as JSONSchema.JSONSchema;
 
-  type SchemaLike = Record<string, Record<string, unknown>>;
-  const componentsSchemas = (newSchema.components as SchemaLike)?.schemas;
+  const components = newSchema.components as ComponentsLike;
 
-  if (componentsSchemas) {
-    for (const key of Object.keys(componentsSchemas)) {
-      if (!usedDefs.has(key)) {
-        delete componentsSchemas[key as keyof typeof componentsSchemas];
-      }
-    }
+  if (components?.schemas) {
+    components.schemas = Object.fromEntries(
+      Object.entries(components.schemas).filter(([key]) => usedDefs.has(key)),
+    );
   }
 
   return newSchema;

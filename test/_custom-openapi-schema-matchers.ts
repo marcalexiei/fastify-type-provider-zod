@@ -1,18 +1,17 @@
 import { Validator } from '@seriousme/openapi-schema-validator';
 import { expect } from 'vitest';
 
-import 'vitest';
-
-interface CustomMatchers<R = unknown> {
-  toBeValidOpenAPISchema: () => Promise<R>;
+interface CustomMatchers<Result = unknown> {
+  toBeValidOpenAPISchema: () => Promise<Result>;
 }
 
 // https://vitest.dev/guide/extending-matchers
+// oxlint-disable id-length, typescript/no-explicit-any, typescript/no-empty-object-type -- must match vitest's own declarations to merge
 declare module 'vitest' {
-  // biome-ignore lint/suspicious/noExplicitAny: same as vite documentation
   interface Assertion<T = any> extends CustomMatchers<T> {}
   interface AsymmetricMatchersContaining extends CustomMatchers {}
 }
+// oxlint-enable id-length, typescript/no-explicit-any, typescript/no-empty-object-type
 
 const validator = new Validator();
 

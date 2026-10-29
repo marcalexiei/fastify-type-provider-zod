@@ -51,6 +51,7 @@ export interface ZodTypeProvider extends FastifyTypeProvider {
  * ```
  */
 export type FastifyPluginCallbackZod<
+  // oxlint-disable-next-line typescript/no-generated-empty-object-type -- same default as fastify's own plugin types
   Options extends FastifyPluginOptions = Record<never, never>,
   Server extends RawServerBase = RawServerDefault,
 > = FastifyPluginCallback<Options, Server, ZodTypeProvider>;
@@ -66,6 +67,7 @@ export type FastifyPluginCallbackZod<
  * ```
  */
 export type FastifyPluginAsyncZod<
+  // oxlint-disable-next-line typescript/no-generated-empty-object-type -- same default as fastify's own plugin types
   Options extends FastifyPluginOptions = Record<never, never>,
   Server extends RawServerBase = RawServerDefault,
 > = FastifyPluginAsync<Options, Server, ZodTypeProvider>;
@@ -74,7 +76,7 @@ export type FastifyPluginAsyncZod<
 // < Types
 //=============================================================================
 
-function resolveSchema(maybeSchema: $ZodType): $ZodType {
+function resolveSchema(maybeSchema: unknown): $ZodType {
   if (maybeSchema instanceof $ZodType) {
     return maybeSchema;
   }
@@ -87,10 +89,9 @@ function resolveSchema(maybeSchema: $ZodType): $ZodType {
 //=============================================================================
 
 export function createValidatorCompiler(): FastifySchemaCompiler<$ZodType> {
-  // this function will be called on route config
-  return ({ schema: maybeSchema }) => {
-    // this function will be called to validate route information
-    return (data) => {
+  // the outer function is called on route config, the inner one to validate route information
+  return ({ schema: maybeSchema }) =>
+    (data) => {
       const schema = resolveSchema(maybeSchema);
 
       const result = safeParse(schema, data);
@@ -100,24 +101,21 @@ export function createValidatorCompiler(): FastifySchemaCompiler<$ZodType> {
 
       return { value: result.data };
     };
-  };
 }
 
-// biome-ignore-start lint/suspicious/noExplicitAny: Same as json stringify
+// oxlint-disable typescript/no-explicit-any -- same signature as the `JSON.stringify` replacer
 // #region ZodSerializerCompilerOptions
 export interface ZodSerializerCompilerOptions {
   replacer?: (this: any, key: string, value: any) => any;
 }
 // #endregion ZodSerializerCompilerOptions
-// biome-ignore-end lint/suspicious/noExplicitAny: Same as json stringify
+// oxlint-enable typescript/no-explicit-any
 
 export function createSerializerCompiler(
   options?: ZodSerializerCompilerOptions,
 ): FastifySerializerCompiler<$ZodType> {
-  //
-  return ({ schema: maybeSchema, method, url }) => {
-    //
-    return (data) => {
+  return ({ schema: maybeSchema, method, url }) =>
+    (data) => {
       const schema = resolveSchema(maybeSchema);
 
       const result = safeParse(schema, data);
@@ -129,7 +127,6 @@ export function createSerializerCompiler(
 
       return JSON.stringify(result.data, options?.replacer);
     };
-  };
 }
 
 //=============================================================================
@@ -158,7 +155,6 @@ export function createJsonSchemaTransform(
 
   let cachedOpenAPISchemaVersion: OpenAPISchemaVersion | undefined;
 
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: no other way
   return (transformData) => {
     if ('swaggerObject' in transformData) {
       throw new Error('createJsonSchemaTransform - OpenAPI 2.0 is not supported');
@@ -166,6 +162,7 @@ export function createJsonSchemaTransform(
 
     const { schema, url } = transformData;
 
+    // oxlint-disable-next-line typescript/no-unnecessary-condition -- routes without a schema reach the transform too
     if (!schema) {
       return { schema, url };
     }
@@ -199,19 +196,17 @@ export function createJsonSchemaTransform(
       querystring,
       body,
       params,
-    } as Record<string, $ZodType>;
+    } as Record<string, unknown>;
 
     cachedOpenAPISchemaVersion ??= getOpenAPISchemaVersion(transformData);
     const openAPISchemaVersion = cachedOpenAPISchemaVersion;
 
     for (const [prop, maybeSchema] of Object.entries(requestSchemas)) {
       if (maybeSchema) {
-        transformed[prop] = zodSchemaToJson(
-          resolveSchema(maybeSchema),
-          schemaRegistry,
-          'input',
+        transformed[prop] = zodSchemaToJson(resolveSchema(maybeSchema), schemaRegistry, {
+          io: 'input',
           openAPISchemaVersion,
-        );
+        });
       }
     }
 
@@ -219,12 +214,10 @@ export function createJsonSchemaTransform(
       transformed.response = {};
 
       for (const [prop, maybeSchema] of Object.entries(response)) {
-        transformed.response[prop] = zodSchemaToJson(
-          resolveSchema(maybeSchema),
-          schemaRegistry,
-          'output',
+        transformed.response[prop] = zodSchemaToJson(resolveSchema(maybeSchema), schemaRegistry, {
+          io: 'output',
           openAPISchemaVersion,
-        );
+        });
       }
     }
 
@@ -260,7 +253,6 @@ export const createJsonSchemaTransformObject = (
     setIdAsTitleInSchemas = false,
   } = options ?? {};
 
-  // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: not needed
   return (documentObject) => {
     /* v8 ignore next 5 -- @preserve */
     if ('swaggerObject' in documentObject) {
@@ -296,7 +288,7 @@ export const createJsonSchemaTransformObject = (
           `Cannot create schema "${key}": Name conflicts with a pre-existing schema in the OpenAPI document.`,
         );
       }
-      if (inputSchemas[key]) {
+      if (key in inputSchemas) {
         const conflictingInputId = key.slice(0, -'Input'.length);
         throw new Error(
           `Cannot create schema "${key}": It conflicts with the auto-generated input schema for id "${conflictingInputId}". Rename the schema with id "${key}" to avoid using the "Input" suffix.`,

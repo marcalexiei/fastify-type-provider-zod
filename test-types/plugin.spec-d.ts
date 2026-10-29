@@ -20,6 +20,7 @@ describe('plugin', () => {
   });
 
   it('Ensure the defaults of FastifyPluginAsyncZod are the same as FastifyPluginCallback', () => {
+    // oxlint-disable-next-line typescript/no-misused-promises, typescript/strict-void-return -- checks an async plugin against the callback signature
     assertType<FastifyPluginCallback>(async (_fastify, options) => {
       const pluginCallbackZodDefaults: FastifyPluginAsyncZod = async (
         fastifyWithZod,
@@ -48,16 +49,16 @@ describe('plugin', () => {
         {
           schema: {
             body: z.object({
-              x: z.string(),
-              y: z.number(),
-              z: z.boolean(),
+              text: z.string(),
+              count: z.number(),
+              flag: z.boolean(),
             }),
           },
         },
         (req) => {
-          assertType<boolean>(req.body.z);
-          assertType<number>(req.body.y);
-          assertType<string>(req.body.x);
+          assertType<boolean>(req.body.flag);
+          assertType<number>(req.body.count);
+          assertType<string>(req.body.text);
         },
       );
     };
@@ -82,16 +83,16 @@ describe('plugin', () => {
         {
           schema: {
             body: z.object({
-              x: z.string(),
-              y: z.number(),
-              z: z.boolean(),
+              text: z.string(),
+              count: z.number(),
+              flag: z.boolean(),
             }),
           },
         },
         (req) => {
-          assertType<boolean>(req.body.z);
-          assertType<number>(req.body.y);
-          assertType<string>(req.body.x);
+          assertType<boolean>(req.body.flag);
+          assertType<number>(req.body.count);
+          assertType<string>(req.body.text);
         },
       );
       done();

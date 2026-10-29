@@ -34,5 +34,5 @@ app.setErrorHandler((err, req, reply) => {
   }
 
   // the rest of the error handler
-  return;
+  return reply.send(err);
 });

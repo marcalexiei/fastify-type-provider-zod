@@ -1,18 +1,14 @@
 import type { $ZodDate, $ZodUndefined, JSONSchema } from 'zod/v4/core';
-import { $ZodRegistry, $ZodType, toJSONSchema } from 'zod/v4/core';
+import { $ZodRegistry, $ZodType, globalRegistry, toJSONSchema } from 'zod/v4/core';
 
 import type { OpenAPISchemaVersion } from './openapi.ts';
 import { removeJSONSchemaPropertiesNotUsedByOpenAPI } from './openapi.ts';
 
-const getSchemaId = (id: string, io: 'input' | 'output') => {
-  //
-  return io === 'input' ? `${id}Input` : id;
-};
+const getSchemaId = (id: string, io: 'input' | 'output'): string =>
+  io === 'input' ? `${id}Input` : id;
 
-const getReferenceUri = (id: string, io: 'input' | 'output') => {
-  //
-  return `#/components/schemas/${getSchemaId(id, io)}`;
-};
+const getReferenceUri = (id: string, io: 'input' | 'output'): string =>
+  `#/components/schemas/${getSchemaId(id, io)}`;
 
 function isZodDate(entity: unknown): entity is $ZodDate {
   return entity instanceof $ZodType && entity._zod.def.type === 'date';
@@ -29,22 +25,16 @@ const getOverride = (
   },
   io: 'input' | 'output',
   registry: $ZodRegistry,
-) => {
+): void => {
   // Extract metadata from the specified registry.
   // The `.meta()` method adds the element to the global registry.
   // Note: If a custom registry is used, any properties registered via `.meta()`
   // will be lost when `.register()` is called.
-  let meta = registry.get(ctx.zodSchema) as Record<string, unknown>;
-
   // You can still inlining metadata in the schema that are not included in the registry,
   // e.g., a query param
-  if (!meta) {
-    // @ts-expect-error
-    const schemaMeta = ctx.zodSchema.meta() as Record<string, unknown>;
-    if (schemaMeta) {
-      meta = schemaMeta;
-    }
-  }
+  const meta = (registry.get(ctx.zodSchema) ?? globalRegistry.get(ctx.zodSchema)) as
+    | Record<string, unknown>
+    | undefined;
 
   if (meta) {
     if (typeof meta.description === 'string') {
@@ -70,12 +60,12 @@ const getOverride = (
   }
 };
 
-const getZodJSONSchemaTarget = (version: OpenAPISchemaVersion) =>
+const getZodJSONSchemaTarget = (version: OpenAPISchemaVersion): 'openapi-3.0' | 'draft-2020-12' =>
   version === '3.0' ? 'openapi-3.0' : 'draft-2020-12';
 
 const PLACEHOLDER_PREFIX = '__SCHEMA__PLACEHOLDER__';
-const DEFS_PATTERN_31 = /^__SCHEMA__PLACEHOLDER__#\/\$defs\/(.+)$/;
-const DEFS_PATTERN_30 = /^__SCHEMA__PLACEHOLDER__#\/definitions\/(.+)$/;
+const DEFS_PATTERN_31 = /^__SCHEMA__PLACEHOLDER__#\/\$defs\/(?<id>.+)$/;
+const DEFS_PATTERN_30 = /^__SCHEMA__PLACEHOLDER__#\/definitions\/(?<id>.+)$/;
 
 function replaceSchemaRefs(
   schema: unknown,
@@ -95,9 +85,9 @@ function replaceSchemaRefs(
 
   for (const [key, value] of Object.entries(obj)) {
     if (key === '$ref' && typeof value === 'string' && value.startsWith(PLACEHOLDER_PREFIX)) {
-      const match = value.match(pattern);
+      const id = pattern.exec(value)?.groups?.id;
       /* v8 ignore next -- @preserve */
-      result[key] = match ? getReferenceUri(match[1], io) : value;
+      result[key] = id ? getReferenceUri(id, io) : value;
     } else {
       result[key] = replaceSchemaRefs(value, io, openAPISchemaVersion);
     }
@@ -109,9 +99,11 @@ function replaceSchemaRefs(
 export const zodSchemaToJson: (
   zodSchema: $ZodType,
   registry: $ZodRegistry<{ id?: string }>,
-  io: 'input' | 'output',
-  openAPISchemaVersion: OpenAPISchemaVersion,
-) => JSONSchema.BaseSchema = (zodSchema, registry, io, openAPISchemaVersion) => {
+  options: {
+    io: 'input' | 'output';
+    openAPISchemaVersion: OpenAPISchemaVersion;
+  },
+) => JSONSchema.BaseSchema = (zodSchema, registry, { io, openAPISchemaVersion }) => {
   const schemaRegistryEntry = registry.get(zodSchema);
 
   /**
@@ -161,7 +153,9 @@ export const zodSchemaToJson: (
      */
     uri: () => '__SCHEMA__PLACEHOLDER__',
 
-    override: (ctx) => getOverride(ctx, io, registry),
+    override: (ctx) => {
+      getOverride(ctx, io, registry);
+    },
   });
 
   const jsonSchemaWithRef = replaceSchemaRefs(
@@ -193,7 +187,9 @@ export const zodRegistryToJson: (
     cycles: 'ref',
     reused: 'inline',
     uri: (id) => getReferenceUri(id, io),
-    override: (ctx) => getOverride(ctx, io, registry),
+    override: (ctx) => {
+      getOverride(ctx, io, registry);
+    },
   }).schemas;
 
   const jsonSchemas: Record<string, JSONSchema.BaseSchema> = {};
