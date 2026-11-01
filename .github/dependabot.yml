@@ -49,3 +49,10 @@ updates:
           - 'oxlint'
           - 'oxlint-tsgolint'
           - '@marcalexiei/oxlint-config'
+
+      format:
+        applies-to: 'version-updates'
+        dependency-type: 'development'
+        patterns:
+          - 'oxfmt'
+          - '@marcalexiei/oxfmt-config'
