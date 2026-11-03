@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - name: Setup GitHub App Bot User
-        uses: marcalexiei/github-actions/setup-github-app-user-bot@35654007fc916287603cd114516a3d1295f62689 # v2.0.0
+        uses: marcalexiei/github-actions/setup-github-app-user-bot@92c64c084d3479cff756151cb8163d03608f2acd # v2.4.2
         id: app-bot
         with:
           app-id: ${{ vars.RELEASE_HELPER_APP_ID }}
