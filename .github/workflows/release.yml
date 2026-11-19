@@ -31,7 +31,7 @@ jobs:
 
     steps:
       - name: Setup GitHub App Bot User
-        uses: marcalexiei/github-actions/setup-github-app-user-bot@0ac3ea042e173813ebc7b086c174705c5bfc0fb6 # v2.6.2
+        uses: marcalexiei/github-actions/setup-github-app-user-bot@3145eb8a7405dee53929e0c2495e26af7191daf0 # v2.6.4
         id: app-bot
         with:
           app-id: ${{ vars.RELEASE_HELPER_APP_ID }}
@@ -48,7 +48,7 @@ jobs:
           persist-credentials: false
 
       - name: Install Dependencies
-        uses: marcalexiei/github-actions/setup-node-and-pnpm@a940b1e965ddfc255d1ce7bf8a7f0f88eeb0af18 # v2.6.3
+        uses: marcalexiei/github-actions/setup-node-and-pnpm@3145eb8a7405dee53929e0c2495e26af7191daf0 # v2.6.4
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
@@ -82,7 +82,7 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Install Dependencies
-        uses: marcalexiei/github-actions/setup-node-and-pnpm@a940b1e965ddfc255d1ce7bf8a7f0f88eeb0af18 # v2.6.3
+        uses: marcalexiei/github-actions/setup-node-and-pnpm@3145eb8a7405dee53929e0c2495e26af7191daf0 # v2.6.4
 
       - name: Build with VitePress
         run: pnpm run docs:build
