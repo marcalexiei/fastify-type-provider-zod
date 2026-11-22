@@ -22,25 +22,21 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read # the app token, not GITHUB_TOKEN, pushes the release and opens the PR
       id-token: write # added for provenance
 
     outputs:
       published: ${{ steps.result.outputs.published }}
 
     steps:
-      - name: Setup GitHub App Bot User
-        uses: marcalexiei/github-actions/setup-github-app-user-bot@7d232a08434641e4df36f5921d4308a2bba23f9c # v3.0.0
-        id: app-bot
+      - name: Create release helper token
+        id: release-helper
+        uses: actions/create-github-app-token@f418cff399f7aef4c2f0ad47e25ca7a6abbdd6fc # v3.4.0
         with:
           client-id: ${{ vars.RELEASE_HELPER_APP_ID }}
           private-key: ${{ secrets.RELEASE_HELPER_PRIVATE_KEY }}
-
-      - name: Configure git user for GitHub App
-        run: |
-          git config --global user.name '${{ steps.app-bot.outputs.bot-name }}'
-          git config --global user.email '${{ steps.app-bot.outputs.bot-email }}'
+          permission-contents: write # pushes the release branch, tags and releases
+          permission-pull-requests: write # opens and updates the release PR
 
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -52,18 +48,16 @@ jobs:
 
       - name: Create Release Pull Request or Publish to npm
         id: changesets
-        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
+        uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
-          commit: 'chore: release'
-          title: 'chore: release'
-          publish: 'pnpm release'
-          setupGitUser: false
-        env:
-          GITHUB_TOKEN: ${{ steps.app-bot.outputs.token }}
+          github-token: ${{ steps.release-helper.outputs.token }}
+          commit-message: 'chore: release'
+          pr-title: 'chore: release'
+          publish-script: 'pnpm release'
 
       - name: Output changeset result
         id: result
-        if: ${{ steps.changesets.outputs.hasChangesets == 'false' }}
+        if: ${{ steps.changesets.outputs['has-changesets'] == 'false' }}
         run: echo "published=true" >> "$GITHUB_OUTPUT"
 
   documentation-build:
