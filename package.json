@@ -56,7 +56,7 @@
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "docs:lint": "tsc -p examples/tsconfig.json",
-    "check-all": "pnpm run build && pnpm run test && pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run docs:lint"
+    "validate": "pnpm run build && pnpm run test && pnpm run format:check && pnpm run lint && pnpm run typecheck && pnpm run docs:lint"
   },
   "dependencies": {
     "@fastify/error": "^4.2.0"

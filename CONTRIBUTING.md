@@ -7,7 +7,7 @@
 To check that every thing works correctly run:
 
 ```sh
-pnpm run check-all
+pnpm run validate
 ```
 
 ## Documentation changes
