@@ -168,7 +168,7 @@ importers:
     dependencies:
       '@fastify/error':
         specifier: ^4.2.0
-        version: 4.2.0
+        version: 4.3.0
     devDependencies:
       '@changesets/changelog-github':
         specifier: 1.0.1
@@ -523,8 +523,8 @@ packages:
   '@fastify/ajv-compiler@4.0.5':
     resolution: {integrity: sha512-KoWKW+MhvfTRWL4qrhUwAAZoaChluo0m0vbiJlGMt2GXvL4LVPQEjt8kSpHI3IBq5Rez8fg+XeH3cneztq+C7A==}
 
-  '@fastify/error@4.2.0':
-    resolution: {integrity: sha512-RSo3sVDXfHskiBZKBPRgnQTtIqpi/7zhJOEmAxCiBcM7d0uwdGdxLlsCaLzGs8v8NnxIRlfG0N51p5yFaOentQ==}
+  '@fastify/error@4.3.0':
+    resolution: {integrity: sha512-mtIdc4R7HnUMOuUDQgnJkEF+Omr2p3JrSSJ44+RME/eAQ5TqdDy5MvXAjze/RyVHhJckuJKkXnMhKfPmFMKqyA==}
 
   '@fastify/fast-json-stringify-compiler@5.0.3':
     resolution: {integrity: sha512-uik7yYHkLr6fxd8hJSZ8c+xF4WafPK+XzneQDPU+D10r5X19GW8lJcom2YijX2+qtFF1ENJlHXKFM9ouXNJYgQ==}
@@ -2725,7 +2725,7 @@ snapshots:
       ajv-formats: 3.0.1
       fast-uri: 3.1.2
 
-  '@fastify/error@4.2.0': {}
+  '@fastify/error@4.3.0': {}
 
   '@fastify/fast-json-stringify-compiler@5.0.3':
     dependencies:
@@ -3503,7 +3503,7 @@ snapshots:
 
   avvio@9.2.0:
     dependencies:
-      '@fastify/error': 4.2.0
+      '@fastify/error': 4.3.0
       fastq: 1.20.1
 
   balanced-match@4.0.4: {}
@@ -3631,7 +3631,7 @@ snapshots:
   fastify@5.8.5:
     dependencies:
       '@fastify/ajv-compiler': 4.0.5
-      '@fastify/error': 4.2.0
+      '@fastify/error': 4.3.0
       '@fastify/fast-json-stringify-compiler': 5.0.3
       '@fastify/proxy-addr': 5.1.0
       abstract-logging: 2.0.1
